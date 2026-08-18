@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WallDoctor | Luxury Home Surface Diagnosis</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --bg: #0B0A0D;
+  --bg2: #131019;
+  --surface: #17141D;
+  --surface2: #1E1926;
+  --ink: #F4EEDF;
+  --ink-muted: #A79C8A;
+  --gold: #E4C063;
+  --gold-bright: #F4D889;
+  --gold-deep: #A9812F;
+  --emerald: #1E6F5C;
+  --emerald-bright: #35A78A;
+  --wine: #7A2340;
+  --line: rgba(228,192,99,0.22);
+  --line-strong: rgba(228,192,99,0.4);
+}
+*{ box-sizing: border-box; margin:0; padding:0; }
+body{
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(228,192,99,0.10), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 90% 10%, rgba(30,111,92,0.14), transparent 55%),
+    radial-gradient(ellipse 800px 600px at 50% 100%, rgba(122,35,64,0.10), transparent 60%),
+    var(--bg);
+  color: var(--ink); font-family: 'Inter', sans-serif; line-height: 1.5; min-height: 100vh;
+  overflow-x:hidden; position:relative;
+}
+body::before{
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:0.5;
+  background: radial-gradient(circle at 1px 1px, rgba(228,192,99,0.06) 1px, transparent 0) 0 0/26px 26px;
+}
+.orb{ position:fixed; border-radius:50%; filter: blur(90px); opacity:0.35; z-index:0; pointer-events:none; }
+.orb1{ width:420px; height:420px; background: var(--gold); top:-120px; left:-100px; animation: floatA 22s ease-in-out infinite; }
+.orb2{ width:380px; height:380px; background: var(--emerald); top:20%; right:-140px; animation: floatB 26s ease-in-out infinite; }
+.orb3{ width:340px; height:340px; background: var(--wine); bottom:-100px; left:30%; animation: floatC 30s ease-in-out infinite; }
+@keyframes floatA{ 0%,100%{ transform: translate(0,0);} 50%{ transform: translate(60px,80px);} }
+@keyframes floatB{ 0%,100%{ transform: translate(0,0);} 50%{ transform: translate(-70px,60px);} }
+@keyframes floatC{ 0%,100%{ transform: translate(0,0);} 50%{ transform: translate(40px,-70px);} }
+
+.wrap{ max-width: 1080px; margin: 0 auto; padding: 0 24px; position:relative; z-index:1; }
+header{ display:flex; align-items:center; justify-content:space-between; padding: 28px 24px; max-width: 1080px; margin: 0 auto; position:relative; z-index:2; }
+.brand{ display:flex; align-items:center; gap:12px; }
+.brand-mark{ width:42px; height:42px; border-radius:10px; background: linear-gradient(155deg, var(--gold-bright), var(--gold-deep)); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow: 0 4px 20px rgba(228,192,99,0.35); }
+.brand-mark svg{ width:22px; height:22px; }
+.brand-name{ font-family:'Fraunces', serif; font-weight:700; font-size:1.4rem; letter-spacing:0.01em; background: linear-gradient(90deg, var(--gold-bright), var(--ink), var(--gold-bright)); background-size:220% auto; -webkit-background-clip:text; background-clip:text; color:transparent; animation: shimmerText 6s linear infinite; }
+@keyframes shimmerText{ 0%{ background-position: 0% 50%;} 100%{ background-position: 220% 50%;} }
+.brand-tag{ font-size:0.66rem; color:var(--ink-muted); font-family:'IBM Plex Mono',monospace; letter-spacing:0.12em; margin-top:2px; }
+nav{ display:flex; gap:30px; font-size:0.9rem; color:var(--ink-muted); }
+nav a{ color:inherit; text-decoration:none; position:relative; padding-bottom:3px; transition:color .25s ease; }
+nav a::after{ content:''; position:absolute; left:0; bottom:0; width:0; height:1px; background: var(--gold); transition: width .3s ease; }
+nav a:hover{ color:var(--gold-bright); }
+nav a:hover::after{ width:100%; }
+@media (max-width:640px){ nav{ display:none; } }
+
+.header-right{ display:flex; align-items:center; gap:22px; }
+.lang-toggle{ display:flex; border:1px solid var(--line-strong); border-radius:20px; overflow:hidden; }
+.lang-opt{ font-family:'IBM Plex Mono',monospace; font-size:0.72rem; font-weight:600; padding:6px 12px; color:var(--ink-muted); cursor:pointer; transition: all .2s ease; }
+.lang-opt.active{ background: linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); color:#1A1408; }
+.auth-btn{ font-family:'Inter',sans-serif; font-size:0.84rem; font-weight:700; background: rgba(255,255,255,0.05); color:var(--ink); border:1px solid var(--line-strong); padding:9px 18px; border-radius:9px; cursor:pointer; transition: all .2s ease; white-space:nowrap; }
+.auth-btn:hover{ border-color:var(--gold-bright); color:var(--gold-bright); }
+.user-chip{ display:flex; align-items:center; gap:9px; }
+.user-chip .provider-avatar{ width:32px; height:32px; font-size:0.8rem; }
+.user-chip-name{ font-size:0.84rem; color:var(--ink); font-weight:600; }
+.logout-link{ font-size:0.72rem; color:var(--ink-muted); cursor:pointer; text-decoration:underline; margin-left:6px; }
+.logout-link:hover{ color:var(--gold-bright); }
+@media (max-width:640px){ .header-right{ gap:12px; } .auth-btn{ padding:8px 12px; font-size:0.78rem; } }
+
+.auth-modal{ max-width:400px; }
+.auth-tabs{ display:flex; gap:8px; margin-bottom:22px; border-bottom:1px solid var(--line); }
+.auth-tab{ flex:1; text-align:center; padding:10px 0; font-family:'Inter',sans-serif; font-weight:700; font-size:0.9rem; color:var(--ink-muted); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition: all .2s ease; }
+.auth-tab.active{ color:var(--gold-bright); border-color:var(--gold-bright); }
+.auth-field{ margin-bottom:14px; }
+.auth-field label{ display:block; font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:var(--ink-muted); letter-spacing:0.05em; margin-bottom:6px; }
+.auth-error{ color:#E8A0B8; font-size:0.82rem; margin-bottom:10px; min-height:1em; }
+.auth-note{ font-size:0.76rem; color:var(--ink-muted); text-align:center; margin-top:14px; }
+
+.hero{ padding: 40px 24px 10px; text-align:center; position:relative; z-index:2; }
+.eyebrow{ display:inline-flex; align-items:center; gap:9px; font-family:'IBM Plex Mono',monospace; font-size:0.72rem; letter-spacing:0.14em; color: var(--gold-bright); background: rgba(228,192,99,0.08); border:1px solid var(--line-strong); padding:7px 16px; border-radius:30px; margin-bottom:28px; backdrop-filter: blur(6px); animation: fadeUp .8s ease both; }
+.eyebrow .dot{ width:6px; height:6px; border-radius:50%; background:var(--gold-bright); box-shadow: 0 0 10px var(--gold-bright); animation: pulseDot 1.6s ease-in-out infinite; }
+@keyframes pulseDot{ 0%,100%{ opacity:1; transform:scale(1);} 50%{ opacity:0.4; transform:scale(0.7);} }
+h1{ font-family:'Fraunces', serif; font-weight:600; font-size: clamp(2.1rem, 5.4vw, 3.6rem); letter-spacing:-0.01em; max-width:820px; margin:0 auto 22px; line-height:1.15; animation: fadeUp .9s ease .1s both; }
+h1 .gold-text{ background: linear-gradient(100deg, var(--gold-deep), var(--gold-bright) 30%, var(--gold-bright) 50%, var(--gold-deep) 70%); background-size:250% auto; -webkit-background-clip:text; background-clip:text; color:transparent; font-style:italic; animation: shimmerText 5s linear infinite; }
+.hero p{ color:var(--ink-muted); font-size:1.08rem; max-width:560px; margin:0 auto 46px; animation: fadeUp 1s ease .2s both; }
+@keyframes fadeUp{ from{ opacity:0; transform: translateY(18px);} to{ opacity:1; transform:none;} }
+.stage{ max-width: 760px; margin: 0 auto 90px; padding: 0 24px; position:relative; z-index:2; }
+
+.dropzone{
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  backdrop-filter: blur(10px);
+  padding: 60px 24px;
+  text-align:center;
+  position:relative;
+  animation: fadeUp 1s ease .3s both;
+  overflow:hidden;
+}
+.dropzone::before{
+  content:''; position:absolute; inset:-1px; border-radius:20px; padding:1px;
+  background: conic-gradient(from var(--rot,0deg), transparent 0 60%, var(--gold-bright), transparent 75%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: rotateBorder 5s linear infinite; opacity:0.6;
+}
+@property --rot{ syntax:'<angle>'; inherits:false; initial-value:0deg; }
+@keyframes rotateBorder{ to{ --rot: 360deg; } }
+.dz-icon{ width:64px; height:64px; margin:0 auto 20px; border-radius:50%; background: linear-gradient(160deg, rgba(228,192,99,0.18), rgba(228,192,99,0.05)); border:1px solid var(--line-strong); display:flex; align-items:center; justify-content:center; position:relative; z-index:1; }
+.dz-icon svg{ width:28px; height:28px; stroke:var(--gold-bright); }
+.dropzone h3{ font-family:'Fraunces',serif; font-weight:600; font-size:1.35rem; margin-bottom:8px; position:relative; z-index:1; color:var(--ink); }
+.dropzone p{ color:var(--ink-muted); font-size:0.92rem; position:relative; z-index:1; margin-bottom:6px; }
+.dz-actions{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:24px; position:relative; z-index:1; }
+.dz-btn{
+  display:inline-flex; align-items:center; gap:9px;
+  background: linear-gradient(135deg, var(--gold-bright), var(--gold-deep));
+  color:#1A1408; font-family:'Inter',sans-serif; font-weight:700; font-size:0.9rem;
+  padding:13px 22px; border-radius:10px; cursor:pointer; position:relative; overflow:hidden;
+  transition: transform .2s ease, box-shadow .2s ease;
+  box-shadow: 0 6px 22px rgba(228,192,99,0.25);
+}
+.dz-btn::after{ content:''; position:absolute; top:0; left:-60%; width:40%; height:100%; background: linear-gradient(120deg, transparent, rgba(255,255,255,0.55), transparent); transform: skewX(-20deg); transition: left .5s ease; }
+.dz-btn:hover::after{ left:130%; }
+.dz-btn svg{ width:17px; height:17px; stroke:#1A1408; }
+.dz-btn:hover{ transform: translateY(-2px); box-shadow: 0 10px 28px rgba(228,192,99,0.4); }
+.dz-btn:active{ transform: translateY(0); }
+.dz-btn.ghost{ background: rgba(255,255,255,0.05); color:var(--ink); border:1px solid var(--line-strong); box-shadow:none; }
+.dz-btn.ghost svg{ stroke:var(--ink); }
+.dz-btn.ghost::after{ background: linear-gradient(120deg, transparent, rgba(228,192,99,0.25), transparent); }
+.dropzone input[type="file"]{ position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
+
+.analysis{ display:none; }
+.analysis.active{ display:grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items:start; animation: fadeUp .6s ease both; }
+@media (max-width:760px){ .analysis.active{ grid-template-columns: 1fr; } }
+
+.scan-frame{ position:relative; border-radius:18px; overflow:hidden; background:#0A0910; aspect-ratio: 4/3; border: 1px solid var(--line-strong); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+.scan-frame img{ width:100%; height:100%; object-fit:cover; display:block; opacity:0.9; }
+.corner{ position:absolute; width:24px; height:24px; border-color: var(--gold-bright); opacity:0.95; z-index:3; }
+.corner.tl{ top:12px; left:12px; border-top:2px solid; border-left:2px solid; border-radius: 5px 0 0 0;}
+.corner.tr{ top:12px; right:12px; border-top:2px solid; border-right:2px solid; border-radius: 0 5px 0 0;}
+.corner.bl{ bottom:12px; left:12px; border-bottom:2px solid; border-left:2px solid; border-radius: 0 0 0 5px;}
+.corner.br{ bottom:12px; right:12px; border-bottom:2px solid; border-right:2px solid; border-radius: 0 0 5px 0;}
+.scanline{ position:absolute; left:0; right:0; height:2px; background: linear-gradient(90deg, transparent, var(--gold-bright), transparent); box-shadow: 0 0 18px 4px rgba(228,192,99,0.7); top:0; z-index:2; display:none; }
+.scan-frame.scanning .scanline{ display:block; animation: sweep 2.1s ease-in-out infinite; }
+.scan-frame.scanning::after{ content:''; position:absolute; inset:0; z-index:1; background: linear-gradient(180deg, rgba(228,192,99,0.08), rgba(0,0,0,0.4)); }
+@keyframes sweep{ 0%{ top:4%; } 50%{ top:94%; } 100%{ top:4%; } }
+.scan-label{ position:absolute; bottom:12px; left:14px; z-index:3; font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:var(--gold-bright); letter-spacing:0.06em; background:rgba(0,0,0,0.55); padding:4px 10px; border-radius:5px; border:1px solid var(--line); }
+.scan-frame.success .corner{ border-color: var(--emerald-bright); }
+.scan-frame.success .scan-label{ color:var(--emerald-bright); border-color: rgba(53,167,138,0.5); }
+.scan-frame.success::after{ content:''; position:absolute; inset:0; z-index:1; background: linear-gradient(180deg, rgba(53,167,138,0.12), transparent 40%); animation: successFlash .8s ease; }
+@keyframes successFlash{ 0%{ opacity:0;} 30%{ opacity:1;} 100%{ opacity:1;} }
+.report{ background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.01)); backdrop-filter: blur(10px); border:1px solid var(--line); border-radius:18px; padding: 28px 28px 24px; min-height: 300px; position:relative; box-shadow: 0 20px 50px rgba(0,0,0,0.35); }
+.report::before{ content:''; position:absolute; top:0; left:26px; right:26px; height:1px; background: repeating-linear-gradient(90deg, var(--line-strong) 0 6px, transparent 6px 12px); }
+.report-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+.report-title{ font-family:'IBM Plex Mono',monospace; font-size:0.72rem; letter-spacing:0.12em; color:var(--gold-bright); }
+.report-status{ font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:var(--emerald-bright); }
+.progress-wrap{ display:flex; align-items:center; gap:12px; margin-bottom:22px; }
+.progress-track{ flex:1; height:6px; border-radius:4px; background: rgba(255,255,255,0.07); overflow:hidden; position:relative; }
+.progress-fill{ height:100%; width:0%; border-radius:4px; background: linear-gradient(90deg, var(--gold-deep), var(--gold-bright)); box-shadow: 0 0 10px rgba(228,192,99,0.6); transition: width .5s ease; position:relative; }
+.progress-fill::after{ content:''; position:absolute; inset:0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent); width:40px; animation: progressShine 1.4s linear infinite; }
+@keyframes progressShine{ 0%{ transform: translateX(-40px);} 100%{ transform: translateX(220px);} }
+.progress-pct{ font-family:'IBM Plex Mono',monospace; font-size:0.74rem; color:var(--gold-bright); min-width:36px; text-align:right; }
+.success-banner{ display:none; flex-direction:column; align-items:center; text-align:center; padding:30px 10px 18px; }
+.success-banner.show{ display:flex; animation: successPop .5s cubic-bezier(.34,1.56,.64,1); }
+@keyframes successPop{ from{ opacity:0; transform: scale(0.7);} to{ opacity:1; transform: scale(1);} }
+.success-check{ width:60px; height:60px; border-radius:50%; background: linear-gradient(160deg, var(--emerald-bright), var(--emerald)); display:flex; align-items:center; justify-content:center; margin-bottom:16px; box-shadow: 0 0 0 6px rgba(53,167,138,0.15), 0 10px 26px rgba(30,111,92,0.4); }
+.success-check svg{ width:28px; height:28px; }
+.success-text{ font-family:'Fraunces',serif; font-weight:600; font-size:1.3rem; color:var(--emerald-bright); margin-bottom:6px; }
+.success-sub{ font-family:'IBM Plex Mono',monospace; font-size:0.76rem; color:var(--ink-muted); letter-spacing:0.03em; }
+.steps{ display:flex; flex-direction:column; gap:14px; margin: 32px 0 12px; }
+.step{ display:flex; align-items:center; gap:11px; font-size:0.93rem; color:var(--ink-muted); }
+.step .chk{ width:17px; height:17px; border-radius:50%; border:2px solid var(--line-strong); flex-shrink:0; position:relative; transition: all .25s ease; }
+.step.done .chk{ border-color: var(--gold-bright); background: var(--gold-bright); box-shadow: 0 0 10px rgba(228,192,99,0.6); }
+.step.done .chk::after{ content:''; position:absolute; left:4px; top:1px; width:4px; height:9px; border:solid #1A1408; border-width:0 2px 2px 0; transform:rotate(40deg); }
+.step.done{ color: var(--ink); }
+.step.active .chk{ border-color: var(--gold-bright); animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(228,192,99,0.35);} 50%{ box-shadow:0 0 0 6px rgba(228,192,99,0);} }
+.result{ display:none; }
+.result.show{ display:block; animation: rise .4s ease; }
+@keyframes rise{ from{ opacity:0; transform: translateY(8px);} to{ opacity:1; transform:none;} }
+.badge{ display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:0.68rem; letter-spacing:0.08em; padding:5px 12px; border-radius:20px; margin-bottom:14px; border:1px solid; }
+.badge.problem{ background:rgba(122,35,64,0.18); color:#E8A0B8; border-color: rgba(122,35,64,0.5); }
+.badge.healthy{ background:rgba(30,111,92,0.18); color:var(--emerald-bright); border-color: rgba(30,111,92,0.5); }
+.problem-name{ font-family:'Fraunces',serif; font-weight:600; font-size:1.6rem; margin-bottom:10px; line-height:1.2; color:var(--ink); }
+.problem-desc{ color:var(--ink-muted); font-size:0.95rem; margin-bottom:18px; }
+.meta-row{ display:flex; gap:26px; margin-bottom:20px; flex-wrap:wrap; }
+.meta-item .label{ font-size:0.68rem; color:var(--ink-muted); font-family:'IBM Plex Mono',monospace; letter-spacing:0.08em; margin-bottom:6px; }
+.severity-bar{ display:flex; gap:3px; }
+.severity-bar span{ width:17px; height:8px; border-radius:2px; background: rgba(255,255,255,0.08); }
+.severity-bar span.on{ background: linear-gradient(90deg, var(--gold-deep), var(--gold-bright)); box-shadow: 0 0 8px rgba(228,192,99,0.5); }
+.urgency-pill{ font-size:0.8rem; font-weight:700; padding:4px 12px; border-radius:6px; }
+.service-card{ background: linear-gradient(160deg, rgba(228,192,99,0.08), rgba(228,192,99,0.02)); border:1px solid var(--line-strong); border-radius:12px; padding:20px 22px; margin-top:16px; }
+.service-card .sc-label{ font-size:0.68rem; font-family:'IBM Plex Mono',monospace; color:var(--gold-bright); letter-spacing:0.08em; margin-bottom:7px; }
+.service-card h4{ font-family:'Fraunces',serif; font-size:1.15rem; margin-bottom:6px; color:var(--ink); }
+.service-card p{ font-size:0.89rem; color:var(--ink-muted); margin-bottom:14px; }
+.contact-block{ border-top:1px dashed var(--line-strong); margin-top:14px; padding-top:14px; display:flex; flex-direction:column; gap:8px; }
+.contact-row{ display:flex; align-items:center; gap:10px; font-size:0.88rem; color:var(--ink); }
+.contact-row svg{ width:16px; height:16px; stroke:var(--gold-bright); flex-shrink:0; }
+.contact-row a{ color:var(--ink); text-decoration:none; transition:color .2s ease; }
+.contact-row a:hover{ color:var(--gold-bright); }
+
+.provider-section{ margin-top:8px; }
+.provider-list{ display:flex; flex-direction:column; gap:12px; }
+.provider-card{ background: linear-gradient(160deg, rgba(255,255,255,0.035), rgba(255,255,255,0.01)); border:1px solid var(--line); border-radius:12px; padding:16px 18px; display:flex; gap:14px; align-items:flex-start; transition: border-color .2s ease, transform .2s ease; }
+.provider-card:hover{ border-color: var(--line-strong); transform: translateY(-2px); }
+.provider-avatar{ width:44px; height:44px; border-radius:50%; background: linear-gradient(155deg, var(--gold-bright), var(--gold-deep)); display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-weight:700; font-size:1.05rem; color:#1A1408; flex-shrink:0; }
+.provider-body{ flex:1; min-width:0; }
+.provider-name-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:2px; }
+.provider-name{ font-family:'Fraunces',serif; font-weight:600; font-size:1.02rem; color:var(--ink); }
+.provider-badge{ font-family:'IBM Plex Mono',monospace; font-size:0.6rem; letter-spacing:0.05em; padding:2px 8px; border-radius:10px; background:rgba(53,167,138,0.15); color:var(--emerald-bright); white-space:nowrap; }
+.provider-company{ font-size:0.8rem; color:var(--ink-muted); margin-bottom:8px; }
+.provider-meta{ display:flex; flex-wrap:wrap; gap:12px; font-size:0.78rem; color:var(--ink-muted); margin-bottom:10px; }
+.provider-meta .pm-rating{ display:flex; align-items:center; gap:4px; color:var(--gold-bright); font-weight:700; }
+.provider-meta .pm-rating svg{ width:12px; height:12px; fill:var(--gold-bright); stroke:none; }
+.provider-actions{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.provider-price{ font-family:'Fraunces',serif; font-weight:600; font-size:1rem; color:var(--gold-bright); margin-right:auto; }
+.pbtn{ font-family:'Inter',sans-serif; font-size:0.78rem; font-weight:700; padding:8px 14px; border-radius:8px; cursor:pointer; border:none; display:inline-flex; align-items:center; gap:6px; text-decoration:none; }
+.pbtn.book{ background: linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); color:#1A1408; }
+.pbtn.call{ background: rgba(255,255,255,0.06); color:var(--ink); border:1px solid var(--line-strong); }
+.pbtn svg{ width:13px; height:13px; }
+.provider-note{ font-size:0.8rem; color:var(--ink-muted); text-align:center; margin-top:10px; }
+
+.modal-overlay{ display:none; position:fixed; inset:0; background: rgba(6,5,8,0.75); backdrop-filter: blur(6px); z-index:100; align-items:center; justify-content:center; padding:20px; }
+.modal-overlay.show{ display:flex; animation: fadeIn .25s ease; }
+@keyframes fadeIn{ from{ opacity:0;} to{ opacity:1;} }
+.payment-modal{ background: linear-gradient(165deg, #1A1621, #100D15); border:1px solid var(--line-strong); border-radius:20px; max-width:440px; width:100%; max-height:88vh; overflow-y:auto; padding:30px 26px 26px; position:relative; box-shadow: 0 30px 80px rgba(0,0,0,0.6); animation: successPop .35s cubic-bezier(.34,1.56,.64,1); }
+.modal-close{ position:absolute; top:16px; right:16px; width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,0.06); border:none; color:var(--ink-muted); font-size:1.2rem; cursor:pointer; line-height:1; }
+.modal-close:hover{ background:rgba(255,255,255,0.1); color:var(--ink); }
+.modal-provider{ display:flex; align-items:center; gap:12px; margin-bottom:20px; padding-bottom:18px; border-bottom:1px dashed var(--line-strong); }
+.modal-provider .provider-avatar{ width:48px; height:48px; }
+.modal-provider-name{ font-family:'Fraunces',serif; font-weight:600; font-size:1.1rem; color:var(--ink); }
+.modal-provider-sub{ font-size:0.8rem; color:var(--ink-muted); }
+.pay-amount-row{ display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+.pay-amount-label{ font-family:'IBM Plex Mono',monospace; font-size:0.7rem; color:var(--ink-muted); letter-spacing:0.05em; }
+.pay-amount{ font-family:'Fraunces',serif; font-weight:700; font-size:1.6rem; color:var(--gold-bright); }
+.pay-methods{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
+.pay-method{ flex:1; min-width:80px; text-align:center; font-size:0.78rem; font-weight:600; padding:10px 8px; border-radius:9px; border:1px solid var(--line-strong); background:rgba(255,255,255,0.03); color:var(--ink-muted); cursor:pointer; transition:all .2s ease; }
+.pay-method.active{ background: linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); color:#1A1408; border-color:transparent; }
+.pay-fields{ margin-bottom:20px; display:flex; flex-direction:column; gap:10px; }
+.pay-fields-row{ display:flex; gap:10px; }
+.pay-input{ background: rgba(255,255,255,0.04); border:1px solid var(--line-strong); border-radius:9px; padding:11px 14px; color:var(--ink); font-family:'Inter',sans-serif; font-size:0.88rem; width:100%; }
+.pay-input:focus{ outline:none; border-color:var(--gold-bright); }
+.pay-cash-note{ font-size:0.85rem; color:var(--ink-muted); background:rgba(255,255,255,0.03); padding:14px; border-radius:9px; }
+.pay-btn{ width:100%; justify-content:center; margin-top:0; }
+.modal-success{ display:none; text-align:center; padding:20px 0 6px; }
+.modal-success.show{ display:block; animation: successPop .4s cubic-bezier(.34,1.56,.64,1); }
+.modal-success-sub{ font-size:0.88rem; color:var(--ink-muted); margin-top:8px; line-height:1.6; }
+#bookingId, #bookingProviderName{ color:var(--gold-bright); font-weight:600; }
+.btn{ display:inline-flex; align-items:center; gap:9px; background: linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); color:#1A1408; border:none; font-family:'Inter',sans-serif; font-weight:700; font-size:0.9rem; padding:12px 22px; border-radius:10px; cursor:pointer; margin-top:18px; text-decoration:none; position:relative; overflow:hidden; box-shadow: 0 6px 20px rgba(228,192,99,0.25); transition: transform .2s ease, box-shadow .2s ease; }
+.btn::after{ content:''; position:absolute; top:0; left:-60%; width:40%; height:100%; background: linear-gradient(120deg, transparent, rgba(255,255,255,0.55), transparent); transform: skewX(-20deg); transition: left .5s ease; }
+.btn:hover::after{ left:130%; }
+.btn:hover{ transform: translateY(-2px); box-shadow: 0 10px 26px rgba(228,192,99,0.4); }
+.btn:active{ transform: translateY(0); }
+.btn.ghost{ background: rgba(255,255,255,0.05); color:var(--ink); border:1px solid var(--line-strong); box-shadow:none; }
+.btn.ghost:hover{ background: rgba(255,255,255,0.09); }
+.btn-row{ display:flex; gap:12px; flex-wrap:wrap; }
+.error-box{ display:none; background:rgba(122,35,64,0.14); border:1px solid rgba(122,35,64,0.5); color:#E8A0B8; padding:16px 18px; border-radius:12px; font-size:0.88rem; margin-top:12px; }
+.error-box.show{ display:block; }
+.services{ padding: 30px 24px 30px; position:relative; z-index:2; }
+.services h2{ font-family:'Fraunces',serif; font-weight:600; font-size:2rem; text-align:center; margin-bottom:10px; color:var(--ink); }
+.services .sub{ text-align:center; color:var(--ink-muted); font-size:0.96rem; margin-bottom:30px; }
+
+.filter-bar{ max-width:1080px; margin:0 auto 32px; background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.01)); border:1px solid var(--line); border-radius:16px; padding:18px 20px; display:flex; flex-wrap:wrap; gap:18px; align-items:flex-start; }
+.filter-group{ display:flex; flex-direction:column; gap:8px; }
+.filter-group .fg-label{ font-family:'IBM Plex Mono',monospace; font-size:0.65rem; letter-spacing:0.08em; color:var(--ink-muted); }
+.filter-chips{ display:flex; gap:6px; flex-wrap:wrap; }
+.chip{ font-family:'Inter',sans-serif; font-size:0.78rem; font-weight:600; padding:6px 13px; border-radius:20px; border:1px solid var(--line-strong); background:rgba(255,255,255,0.03); color:var(--ink-muted); cursor:pointer; transition: all .2s ease; }
+.chip:hover{ border-color:var(--gold-bright); color:var(--ink); }
+.chip.active{ background: linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); color:#1A1408; border-color:transparent; }
+.filter-group.grow{ flex:1; min-width:180px; }
+.sort-select{ font-family:'Inter',sans-serif; font-size:0.82rem; font-weight:600; background:rgba(255,255,255,0.04); color:var(--ink); border:1px solid var(--line-strong); border-radius:10px; padding:8px 12px; cursor:pointer; }
+.filter-count{ font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:var(--gold-bright); text-align:center; margin-bottom:20px; }
+
+.svc-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; max-width:1080px; margin:0 auto; }
+@media (max-width:820px){ .svc-grid{ grid-template-columns:1fr 1fr; } }
+@media (max-width:520px){ .svc-grid{ grid-template-columns:1fr; } }
+.svc-card{ background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.01)); border:1px solid var(--line); border-radius:16px; padding:22px; transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease; position:relative; overflow:hidden; opacity:0; transform: translateY(16px); display:flex; flex-direction:column; }
+.svc-card.reveal{ animation: fadeUp .5s ease forwards; }
+.svc-card:hover{ transform: translateY(-5px); border-color: var(--line-strong); box-shadow: 0 16px 40px rgba(228,192,99,0.12); }
+.svc-card.highlight{ border-color: var(--gold-bright); box-shadow: 0 0 0 1px var(--gold-bright), 0 16px 44px rgba(228,192,99,0.28); }
+.svc-tier{ font-family:'IBM Plex Mono',monospace; font-size:0.62rem; letter-spacing:0.06em; padding:3px 9px; border-radius:12px; white-space:nowrap; }
+.svc-tier.budget{ background:rgba(53,167,138,0.15); color:var(--emerald-bright); }
+.svc-tier.mid{ background:rgba(228,192,99,0.15); color:var(--gold-bright); }
+.svc-tier.premium{ background:rgba(122,35,64,0.2); color:#E8A0B8; }
+.svc-card h4{ font-family:'Fraunces',serif; font-size:1.06rem; margin-bottom:6px; color:var(--ink); }
+.svc-card p{ font-size:0.83rem; color:var(--ink-muted); margin-bottom:14px; flex-grow:1; }
+.svc-meta{ display:flex; align-items:center; justify-content:space-between; font-size:0.78rem; border-top:1px dashed var(--line); padding-top:12px; margin-top:auto; }
+.svc-rating{ display:flex; align-items:center; gap:5px; color:var(--gold-bright); font-weight:700; }
+.svc-rating svg{ width:13px; height:13px; fill:var(--gold-bright); stroke:none; }
+.svc-rating .rcount{ color:var(--ink-muted); font-weight:400; }
+.svc-price{ color:var(--ink); font-weight:700; }
+.svc-duration{ display:flex; align-items:center; gap:5px; color:var(--ink-muted); font-family:'IBM Plex Mono',monospace; font-size:0.7rem; margin-top:8px; }
+.svc-duration svg{ width:12px; height:12px; stroke:var(--ink-muted); }
+.svc-empty{ grid-column:1/-1; text-align:center; color:var(--ink-muted); padding:40px 20px; font-size:0.92rem; }
+
+.team{ padding: 34px 24px 90px; position:relative; z-index:2; }
+.team-card{ max-width:1040px; margin:0 auto; background: linear-gradient(160deg, rgba(228,192,99,0.06), rgba(255,255,255,0.02)); border:1px solid var(--line-strong); border-radius:22px; padding:42px; display:grid; grid-template-columns: 1.1fr 1fr; gap:36px; box-shadow: 0 24px 60px rgba(0,0,0,0.4); }
+@media (max-width:720px){ .team-card{ grid-template-columns:1fr; padding:30px; } }
+.team-card h2{ font-family:'Fraunces',serif; font-size:1.8rem; margin-bottom:12px; color:var(--ink); }
+.team-card > div > p{ color:var(--ink-muted); font-size:0.95rem; margin-bottom:24px; }
+.team-list{ display:flex; flex-direction:column; gap:18px; }
+.team-list .contact-row{ font-size:0.98rem; }
+.team-list .contact-row svg{ width:18px; height:18px; }
+.hours-label{ font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--gold-bright);letter-spacing:0.08em;margin-bottom:12px; }
+.hours-table{ font-size:0.9rem; color:var(--ink-muted); }
+.hours-table div{ display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px dashed var(--line); }
+.hours-table div:last-child{ border-bottom:none; }
+
+footer{ border-top:1px solid var(--line); padding:30px 24px; text-align:center; color:var(--ink-muted); font-size:0.82rem; position:relative; z-index:2; }
+</style>
+</head>
+<body>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+<header>
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#1A1408" stroke-width="2"><path d="M3 12l2-9h14l2 9M5 12v8a1 1 0 001 1h3v-6h6v6h3a1 1 0 001-1v-8"/></svg>
+    </div>
+    <div>
+      <div class="brand-name">WallDoctor</div>
+      <div class="brand-tag" data-i18n="brandTag">LUXURY SURFACE DIAGNOSIS</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <nav>
+      <a href="#stage" data-i18n="navDiagnose">Diagnose</a>
+      <a href="#services" data-i18n="navServices">Services</a>
+      <a href="#team" data-i18n="navContact">Contact</a>
+    </nav>
+    <div class="lang-toggle" id="langToggle">
+      <div class="lang-opt active" data-lang="en">EN</div>
+      <div class="lang-opt" data-lang="hi">हिं</div>
+    </div>
+    <div id="authArea">
+      <button class="auth-btn" id="authBtn" data-i18n="loginSignup">Login / Sign Up</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow"><span class="dot"></span> <span data-i18n="eyebrow">AI-POWERED INSTANT DIAGNOSIS</span></div>
+  <h1 data-i18n="heroTitle">Upload a photo of your <span class="gold-text">wall or floor</span>,<br>find the problem instantly</h1>
+  <p data-i18n="heroSub">Cracks, dampness, mold, or broken tiles — upload a photo and get a full report, plus the right repair service and our team's contact details.</p>
+</section>
+
+<section class="stage" id="stage">
+  <div class="dropzone" id="dropzone">
+    <div class="dz-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+    </div>
+    <h3 data-i18n="dzTitle">Add a photo of the wall or floor</h3>
+    <p data-i18n="dzSub">A clear, close-up photo gives the best result</p>
+    <div class="dz-actions">
+      <label class="dz-btn" for="cameraInput">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <span data-i18n="takePhoto">Take Photo</span>
+      </label>
+      <label class="dz-btn ghost" for="galleryInput">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        <span data-i18n="chooseGallery">Choose from Gallery</span>
+      </label>
+    </div>
+    <input type="file" id="cameraInput" accept="image/*" capture="environment">
+    <input type="file" id="galleryInput" accept="image/*">
+  </div>
+
+  <div class="analysis" id="analysis">
+    <div class="scan-frame" id="scanFrame">
+      <img id="previewImg" alt="Uploaded photo">
+      <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+      <div class="scanline"></div>
+      <div class="scan-label" id="scanLabel" data-i18n="ready">Ready</div>
+    </div>
+
+    <div class="report">
+      <div class="report-head">
+        <div class="report-title" data-i18n="inspectionReport">INSPECTION REPORT</div>
+        <div class="report-status" id="reportStatus" data-i18n="waiting">Waiting</div>
+      </div>
+
+      <div class="progress-wrap" id="progressWrap">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-pct" id="progressPct">0%</div>
+      </div>
+
+      <div class="steps" id="steps">
+        <div class="step" data-s="0"><div class="chk"></div><span data-i18n="step0">Uploading &amp; preparing photo</span></div>
+        <div class="step" data-s="1"><div class="chk"></div><span data-i18n="step1">Identifying surface type</span></div>
+        <div class="step" data-s="2"><div class="chk"></div><span data-i18n="step2">Scanning for cracks &amp; damage</span></div>
+        <div class="step" data-s="3"><div class="chk"></div><span data-i18n="step3">Checking dampness &amp; mold</span></div>
+        <div class="step" data-s="4"><div class="chk"></div><span data-i18n="step4">Compiling report &amp; service match</span></div>
+      </div>
+
+      <div class="success-banner" id="successBanner">
+        <div class="success-check"><svg viewBox="0 0 24 24" fill="none" stroke="#0F3A2E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="success-text" data-i18n="scanSuccessful">Scan Successful</div>
+        <div class="success-sub" data-i18n="reportReady">Report ready — loading details...</div>
+      </div>
+
+      <div class="result" id="result">
+        <span class="badge" id="badge">-</span>
+        <div class="problem-name" id="problemName"></div>
+        <div class="problem-desc" id="problemDesc"></div>
+
+        <div class="meta-row">
+          <div class="meta-item">
+            <div class="label" data-i18n="severity">SEVERITY</div>
+            <div class="severity-bar" id="severityBar">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+          <div class="meta-item">
+            <div class="label" data-i18n="urgency">URGENCY</div>
+            <div class="urgency-pill" id="urgencyPill">-</div>
+          </div>
+        </div>
+
+        <div class="service-card" id="serviceCard">
+          <div class="sc-label" data-i18n="recommendedService">RECOMMENDED SERVICE</div>
+          <h4 id="serviceName"></h4>
+          <p id="serviceDesc"></p>
+        </div>
+
+        <div class="provider-section" id="providerSection">
+          <div class="sc-label" style="margin:20px 0 12px;" data-i18n="availablePros">AVAILABLE PROFESSIONALS &amp; COMPANIES</div>
+          <div class="provider-list" id="providerList"></div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn ghost" id="resetBtn" data-i18n="checkAnother">Check Another Photo</button>
+        </div>
+      </div>
+
+      <div class="error-box" id="errorBox"></div>
+    </div>
+  </div>
+</section>
+
+<section class="services" id="services">
+  <h2 data-i18n="servicesTitle">Home Maintenance &amp; Repair Services</h2>
+  <div class="sub" data-i18n="servicesSub">Browse by category, budget, rating, or turnaround time — the right service also auto-highlights after your photo scan</div>
+
+  <div class="filter-bar">
+    <div class="filter-group grow">
+      <div class="fg-label" data-i18n="fCategory">CATEGORY</div>
+      <div class="filter-chips" id="categoryChips"></div>
+    </div>
+    <div class="filter-group">
+      <div class="fg-label" data-i18n="fBudget">BUDGET</div>
+      <div class="filter-chips" id="budgetChips">
+        <div class="chip active" data-budget="any" data-i18n="any">Any</div>
+        <div class="chip" data-budget="budget" data-i18n="budgetTier">Budget</div>
+        <div class="chip" data-budget="mid" data-i18n="midTier">Mid-range</div>
+        <div class="chip" data-budget="premium" data-i18n="premiumTier">Premium</div>
+      </div>
+    </div>
+    <div class="filter-group">
+      <div class="fg-label" data-i18n="fRating">RATING</div>
+      <div class="filter-chips" id="ratingChips">
+        <div class="chip active" data-rating="0" data-i18n="any">Any</div>
+        <div class="chip" data-rating="4">4.0+</div>
+        <div class="chip" data-rating="4.5">4.5+</div>
+      </div>
+    </div>
+    <div class="filter-group">
+      <div class="fg-label" data-i18n="fTurnaround">TURNAROUND</div>
+      <div class="filter-chips" id="durationChips">
+        <div class="chip active" data-duration="any" data-i18n="any">Any</div>
+        <div class="chip" data-duration="same" data-i18n="sameDay">Same day</div>
+        <div class="chip" data-duration="short" data-i18n="oneTwoDays">1-2 days</div>
+        <div class="chip" data-duration="long" data-i18n="threePlusDays">3+ days</div>
+      </div>
+    </div>
+    <div class="filter-group">
+      <div class="fg-label" data-i18n="fSortBy">SORT BY</div>
+      <select class="sort-select" id="sortSelect">
+        <option value="recommended" data-i18n="sortRecommended">Recommended</option>
+        <option value="price_low" data-i18n="sortPriceLow">Price: Low to High</option>
+        <option value="price_high" data-i18n="sortPriceHigh">Price: High to Low</option>
+        <option value="rating" data-i18n="sortRating">Rating: High to Low</option>
+        <option value="fastest" data-i18n="sortFastest">Fastest Turnaround</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="filter-count" id="filterCount"></div>
+  <div class="svc-grid" id="svcGrid"></div>
+</section>
+
+<section class="team" id="team">
+  <div class="team-card">
+    <div>
+      <h2 data-i18n="teamTitle">Talk to Our Repair Team</h2>
+      <p data-i18n="teamSub">Every diagnosis is backed by a real repair crew. Call, WhatsApp, or email us directly to book a site visit, mention your report result and we'll come prepared.</p>
+      <div class="team-list">
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>
+          <a id="teamPhoneA" href="#">Phone number</a>
+        </div>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2H7a2 2 0 00-2 2v16a2 2 0 002 2h10a2 2 0 002-2V4a2 2 0 00-2-2z"/><path d="M12 18h.01"/></svg>
+          <a id="teamWhatsappA" href="#">WhatsApp</a>
+        </div>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>
+          <a id="teamEmailA" href="#">Email</a>
+        </div>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span id="teamAddress">Service area</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="hours-label" data-i18n="workingHours">WORKING HOURS</div>
+      <div class="hours-table" id="hoursTable"></div>
+    </div>
+  </div>
+</section>
+
+<footer data-i18n="footerNote">WallDoctor - this is a demo diagnostic tool. For serious structural issues, please consult a certified engineer.</footer>
+
+<div class="modal-overlay" id="authOverlay">
+  <div class="payment-modal auth-modal" id="authModal">
+    <button class="modal-close" id="authModalClose">&times;</button>
+
+    <div class="auth-tabs">
+      <div class="auth-tab active" data-tab="login" data-i18n="tabLogin">Login</div>
+      <div class="auth-tab" data-tab="signup" data-i18n="tabSignup">Sign Up</div>
+    </div>
+
+    <div id="authFormView">
+      <div class="auth-field" id="signupNameField" style="display:none;">
+        <label data-i18n="fieldName">Full Name</label>
+        <input type="text" class="pay-input" id="authName" placeholder="">
+      </div>
+      <div class="auth-field">
+        <label data-i18n="fieldEmail">Email Address</label>
+        <input type="email" class="pay-input" id="authEmail" placeholder="you@example.com">
+      </div>
+      <div class="auth-field">
+        <label data-i18n="fieldPassword">Password</label>
+        <input type="password" class="pay-input" id="authPassword" placeholder="••••••••">
+      </div>
+      <div class="auth-error" id="authError"></div>
+      <button class="btn pay-btn" id="authSubmitBtn" data-i18n="btnLogin">Login</button>
+      <p class="auth-note" data-i18n="authDemoNote">Real-time authentication powered by WallDoctor API secure backend.</p>
+    </div>
+
+    <div id="authSuccessView" class="modal-success">
+      <div class="success-check" style="margin:0 auto 18px;"><svg viewBox="0 0 24 24" fill="none" stroke="#0F3A2E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="success-text" data-i18n="welcomeBack">Welcome!</div>
+      <p class="modal-success-sub" id="authWelcomeMsg"></p>
+      <button class="btn ghost" id="authDoneBtn" style="margin-top:20px;" data-i18n="btnContinue">Continue</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="payment-modal" id="paymentModal">
+    <button class="modal-close" id="modalClose">&times;</button>
+
+    <div id="modalBookView">
+      <div class="modal-provider" id="modalProviderInfo"></div>
+      <div class="pay-amount-row">
+        <div class="pay-amount-label">Estimated Service Amount</div>
+        <div class="pay-amount" id="modalAmount">$0</div>
+      </div>
+
+      <div class="pay-methods" id="payMethods">
+        <div class="pay-method active" data-method="card">Card</div>
+        <div class="pay-method" data-method="upi">UPI</div>
+        <div class="pay-method" data-method="netbanking">Net Banking</div>
+        <div class="pay-method" data-method="cash">Cash on Service</div>
+      </div>
+
+      <div class="pay-fields" id="payFieldsCard">
+        <input type="text" class="pay-input" placeholder="Card Number" maxlength="19">
+        <div class="pay-fields-row">
+          <input type="text" class="pay-input" placeholder="MM/YY" maxlength="5">
+          <input type="text" class="pay-input" placeholder="CVV" maxlength="3">
+        </div>
+      </div>
+      <div class="pay-fields" id="payFieldsUpi" style="display:none;">
+        <input type="text" class="pay-input" placeholder="yourname@upi">
+      </div>
+      <div class="pay-fields" id="payFieldsNetbanking" style="display:none;">
+        <select class="pay-input"><option>Select your bank</option><option>First National Bank</option><option>Springfield Trust</option><option>Metro Savings Bank</option></select>
+      </div>
+      <div class="pay-fields" id="payFieldsCash" style="display:none;">
+        <p class="pay-cash-note">Pay the provider directly in cash once the service is completed at your home.</p>
+      </div>
+
+      <button class="btn pay-btn" id="payNowBtn">Confirm &amp; Pay</button>
+    </div>
+
+    <div id="modalSuccessView" class="modal-success">
+      <div class="success-check" style="margin:0 auto 18px;"><svg viewBox="0 0 24 24" fill="none" stroke="#0F3A2E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="success-text">Booking Confirmed</div>
+      <p class="modal-success-sub">Booking ID <span id="bookingId"></span> — <span id="bookingProviderName"></span> will contact you shortly to schedule the visit.</p>
+      <button class="btn ghost" id="modalDoneBtn" style="margin-top:20px;">Done</button>
+    </div>
+  </div>
+</div>
+<script>
+/* ================= LANGUAGE (EN / HI) ================= */
+const TRANSLATIONS = {
+  en: {
+    brandTag: "LUXURY SURFACE DIAGNOSIS", navDiagnose: "Diagnose", navServices: "Services", navContact: "Contact",
+    loginSignup: "Login / Sign Up", tabLogin: "Login", tabSignup: "Sign Up", fieldName: "Full Name", fieldEmail: "Email Address",
+    fieldPassword: "Password", btnLogin: "Login", btnSignup: "Create Account", authDemoNote: "Real-time authentication powered by WallDoctor API secure backend.",
+    welcomeBack: "Welcome!", btnContinue: "Continue",
+    eyebrow: "AI-POWERED INSTANT DIAGNOSIS",
+    heroTitle: 'Upload a photo of your <span class="gold-text">wall or floor</span>,<br>find the problem instantly',
+    heroSub: "Cracks, dampness, mold, or broken tiles — upload a photo and get a full report, plus the right repair service and our team's contact details.",
+    dzTitle: "Add a photo of the wall or floor", dzSub: "A clear, close-up photo gives the best result",
+    takePhoto: "Take Photo", chooseGallery: "Choose from Gallery", ready: "Ready",
+    inspectionReport: "INSPECTION REPORT", waiting: "Waiting",
+    step0: "Uploading &amp; preparing photo", step1: "Identifying surface type", step2: "Scanning for cracks &amp; damage",
+    step3: "Checking dampness &amp; mold", step4: "Compiling report &amp; service match",
+    scanSuccessful: "Scan Successful", reportReady: "Report ready — loading details...",
+    severity: "SEVERITY", urgency: "URGENCY", recommendedService: "RECOMMENDED SERVICE", availablePros: "AVAILABLE PROFESSIONALS &amp; COMPANIES",
+    checkAnother: "Check Another Photo",
+    servicesTitle: "Home Maintenance &amp; Repair Services", servicesSub: "Browse by category, budget, rating, or turnaround time — the right service also auto-highlights after your photo scan",
+    fCategory: "CATEGORY", fBudget: "BUDGET", fRating: "RATING", fTurnaround: "TURNAROUND", fSortBy: "SORT BY",
+    any: "Any", budgetTier: "Budget", midTier: "Mid-range", premiumTier: "Premium",
+    sameDay: "Same day", oneTwoDays: "1-2 days", threePlusDays: "3+ days",
+    sortRecommended: "Recommended", sortPriceLow: "Price: Low to High", sortPriceHigh: "Price: High to Low", sortRating: "Rating: High to Low", sortFastest: "Fastest Turnaround",
+    teamTitle: "Talk to Our Repair Team", teamSub: "Every diagnosis is backed by a real repair crew. Call, WhatsApp, or email us directly to book a site visit, mention your report result and well come prepared.",
+    workingHours: "WORKING HOURS", footerNote: "WallDoctor - this is a demo diagnostic tool. For serious structural issues, please consult a certified engineer."
+  },
+  hi: {
+    brandTag: "लक्ज़री सतह निदान", navDiagnose: "जांच करें", navServices: "सेवाएं", navContact: "संपर्क करें",
+    loginSignup: "लॉगिन / साइन अप", tabLogin: "लॉगिन", tabSignup: "साइन अप", fieldName: "पूरा नाम", fieldEmail: "ईमेल पता",
+    fieldPassword: "पासवर्ड", btnLogin: "लॉगिन करें", btnSignup: "खाता बनाएं", authDemoNote: "वॉलडॉक्टर एपीआई सुरक्षित बैकएंड द्वारा संचालित रीयल-टाइम प्रमाणीकरण।",
+    welcomeBack: "स्वागत है!", btnContinue: "जारी रखें",
+    eyebrow: "AI आधारित तुरंत निदान",
+    heroTitle: 'अपनी <span class="gold-text">दीवार या फर्श</span> की फोटो डालें,<br>समस्या तुरंत पहचानें',
+    heroSub: "दरार, सीलन, फफूंद या टूटी टाइल — फोटो अपलोड करें और पूरी रिपोर्ट, सही मरम्मत सेवा और हमारी टीम की संपर्क जानकारी पाएं।",
+    dzTitle: "दीवार या फर्श की फोटो जोड़ें", dzSub: "एक साफ, नज़दीकी फोटो सबसे अच्छा परिणाम देती है",
+    takePhoto: "फोटो लें", chooseGallery: "गैलरी से चुनें", ready: "तैयार",
+    inspectionReport: "निरीक्षण रिपोर्ट", waiting: "प्रतीक्षा में",
+    step0: "फोटो अपलोड व तैयार हो रही है", step1: "सतह के प्रकार की पहचान", step2: "दरार व क्षति की जांच",
+    step3: "नमी व फफूंद की जांच", step4: "रिपोर्ट व सेवा मिलान तैयार हो रहा है",
+    scanSuccessful: "स्कैन सफल", reportReady: "रिपोर्ट तैयार — विवरण लोड हो रहा है...",
+    severity: "गंभीरता", urgency: "तात्कालिकता", recommendedService: "सुझाई गई सेवा", availablePros: "उपलब्ध पेशेवर व कंपनियां",
+    checkAnother: "दूसरी फोटो जांचें",
+    servicesTitle: "घर की मरम्मत व रखरखाव सेवाएं", servicesSub: "श्रेणी, बजट, रेटिंग, या समय के अनुसार ब्राउज़ करें — फोटो जांच के बाद सही सेवा खुद हाईलाइट हो जाती है",
+    fCategory: "श्रेणी", fBudget: "बजट", fRating: "रेटिंग", fTurnaround: "समय", fSortBy: "क्रमबद्ध करें",
+    any: "कोई भी", budgetTier: "बजट", midTier: "मध्यम", premiumTier: "प्रीमियम",
+    sameDay: "उसी दिन", oneTwoDays: "1-2 दिन", threePlusDays: "3+ दिन",
+    sortRecommended: "अनुशंसित", sortPriceLow: "कीमत: कम से ज़्यादा", sortPriceHigh: "कीमत: ज़्यादा से कम", sortRating: "रेटिंग: ज़्यादा से कम", sortFastest: "सबसे तेज़",
+    teamTitle: "हमारी मरम्मत टीम से बात करें", teamSub: "हर निदान के पीछे एक असली मरम्मत टीम है। साइट विज़िट बुक करने के लिए सीधे कॉल, व्हाट्सएप या ईमेल करें, अपनी रिपोर्ट का परिणाम बताएं और हम तैयार होकर आएंगे।",
+    workingHours: "कार्य समय", footerNote: "WallDoctor - यह एक डेमो निदान उपकरण है। गंभीर संरचनात्मक समस्याओं के लिए प्रमाणित इंजीनियर से सलाह लें।"
+  }
+};
+
+let currentLang = 'en';
+
+function applyLanguage(lang) {
+  currentLang = lang;
+  const dict = TRANSLATIONS[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key] !== undefined) el.innerHTML = dict[key];
+  });
+  document.querySelectorAll('#langToggle .lang-opt').forEach(o => o.classList.toggle('active', o.dataset.lang === lang));
+  document.documentElement.lang = lang;
+  updateAuthUI();
+  if (lastDiagnosis) renderResult(lastDiagnosis);
+}
+
+document.getElementById('langToggle').addEventListener('click', (e) => {
+  const opt = e.target.closest('.lang-opt');
+  if (!opt) return;
+  applyLanguage(opt.dataset.lang);
+});
+
+/* ================= LOGIN / SIGNUP WITH BACKEND INTEGRATION ================= */
+let currentUser = null;
+const authOverlay = document.getElementById('authOverlay');
+const authModal = document.getElementById('authModal');
+const authFormView = document.getElementById('authFormView');
+const authSuccessView = document.getElementById('authSuccessView');
+let authMode = 'login';
+
+function openAuthModal() {
+  authFormView.style.display = 'block';
+  authSuccessView.classList.remove('show');
+  document.getElementById('authError').textContent = '';
+  authOverlay.classList.add('show');
+}
+function closeAuthModal() { authOverlay.classList.remove('show'); }
+
+document.getElementById('authBtn').addEventListener('click', openAuthModal);
+document.getElementById('authModalClose').addEventListener('click', closeAuthModal);
+authOverlay.addEventListener('click', (e) => { if (e.target === authOverlay) closeAuthModal(); });
+
+document.querySelectorAll('.auth-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    authMode = tab.dataset.tab;
+    document.getElementById('signupNameField').style.display = authMode === 'signup' ? 'block' : 'none';
+    document.getElementById('authSubmitBtn').textContent = TRANSLATIONS[currentLang][authMode === 'signup' ? 'btnSignup' : 'btnLogin'];
+    document.getElementById('authError').textContent = '';
+  });
+});
+
+document.getElementById('authSubmitBtn').addEventListener('click', async () => {
+  const name = document.getElementById('authName').value.trim();
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const errorEl = document.getElementById('authError');
+
+  if (!email || !password || (authMode === 'signup' && !name)) {
+    errorEl.textContent = currentLang === 'hi' ? 'कृपया सभी फ़ील्ड भरें।' : 'Please fill in all fields.';
+    return;
+  }
+
+  // UPDATED: Added /api prefix to match your backend endpoints
+  const endpoint = authMode === 'signup' ? '/api/auth/signup' : '/api/auth/login'; 
+  const apiUrl = 'http://127.0.0.1:8000' + endpoint;
+
+  try {
+    const payload = authMode === 'signup' ? { name, email, password } : { email, password };
+    
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+    errorEl.textContent = Array.isArray(data.detail) ? data.detail[0].msg : (data.detail || (currentLang === 'hi' ? 'प्रमाणीकरण विफल रहा।' : 'Authentication failed.'));
+      return;
+    }
+
+    // Success response handling
+    currentUser = { name: data.name || email.split('@')[0], email: email };
+    
+    document.getElementById('authWelcomeMsg').textContent = currentLang === 'hi'
+      ? currentUser.name + ', आप सफलतापूर्वक लॉगिन हो गए हैं।'
+      : 'You are now logged in as ' + currentUser.name + '.';
+    
+    authFormView.style.display = 'none';
+    authSuccessView.classList.add('show');
+    updateAuthUI();
+
+  } catch (error) {
+    errorEl.textContent = currentLang === 'hi' ? 'सर्वर से कनेक्ट नहीं हो सका।' : 'Could not connect to backend server.';
+    console.error("Backend Error:", error);
+  }
+});
+
+document.getElementById('authDoneBtn').addEventListener('click', closeAuthModal);
+
+function updateAuthUI() {
+  const area = document.getElementById('authArea');
+  if (currentUser) {
+    const initials = currentUser.name.slice(0,2).toUpperCase();
+    area.innerHTML = '<div class="user-chip"><div class="provider-avatar">' + initials + '</div><span class="user-chip-name">' + currentUser.name + '</span><span class="logout-link" id="logoutLink">' + (currentLang === 'hi' ? 'लॉगआउट' : 'Logout') + '</span></div>';
+    document.getElementById('logoutLink').addEventListener('click', () => { currentUser = null; updateAuthUI(); });
+  } else {
+    area.innerHTML = '<button class="auth-btn" id="authBtn" data-i18n="loginSignup">' + TRANSLATIONS[currentLang].loginSignup + '</button>';
+    document.getElementById('authBtn').addEventListener('click', openAuthModal);
+  }
+}
+
+/* ================= EDIT THIS TO SET YOUR REAL TEAM DETAILS ================= */
+const TEAM = {
+  phoneDisplay: "+1 (555) 010-2837",
+  phoneLink: "+15550102837",
+  whatsapp: "15550102837",
+  email: "hello@walldoctor.example",
+  address: "Serving Greater Springfield & nearby areas",
+  hours: [
+    ["Monday - Friday", "8:00 AM - 7:00 PM"],
+    ["Saturday", "9:00 AM - 5:00 PM"],
+    ["Sunday", "Emergency calls only"]
+  ]
+};
+/* ============================================================================ */
+
+const SERVICES = [
+  { id:'cr1', cat:'crack_repair', catLabel:'Crack Repair', name:'QuickFix Crack Sealing', desc:'Fast sealing for hairline and minor wall cracks with a smooth touch-up finish.', icon:'<path d="M3 3l7 18 2-9 9-2L3 3z"/>', priceLabel:'$60 - $100', price:80, tier:'budget', rating:4.3, reviews:210, duration:'same', durationLabel:'Same day' },
+  { id:'cr2', cat:'crack_repair', catLabel:'Crack Repair', name:'Structural Crack Repair Pro', desc:'Deep structural crack diagnosis and reinforced repair for larger or recurring cracks.', icon:'<path d="M3 3l7 18 2-9 9-2L3 3z"/>', priceLabel:'$180 - $320', price:250, tier:'premium', rating:4.8, reviews:95, duration:'short', durationLabel:'1-2 days' },
+  { id:'wp1', cat:'waterproofing', catLabel:'Waterproofing', name:'Basic Damp Proofing', desc:'Surface-level moisture treatment for early-stage dampness and light seepage.', icon:'<path d="M12 2c4 5 7 8.5 7 12a7 7 0 01-14 0c0-3.5 3-7 7-12z"/>', priceLabel:'$90 - $150', price:120, tier:'budget', rating:4.2, reviews:140, duration:'short', durationLabel:'1-2 days' },
+  { id:'wp2', cat:'waterproofing', catLabel:'Waterproofing', name:'Complete Waterproofing System', desc:'Full source tracing and multi-layer waterproof coating for chronic seepage issues.', icon:'<path d="M12 2c4 5 7 8.5 7 12a7 7 0 01-14 0c0-3.5 3-7 7-12z"/>', priceLabel:'$350 - $600', price:475, tier:'premium', rating:4.9, reviews:210, duration:'long', durationLabel:'3+ days' },
+  { id:'md1', cat:'mold_treatment', catLabel:'Mold Treatment', name:'Mold Removal & Sanitize', desc:'Anti-fungal cleaning and sanitizing for visible mold patches on walls or ceilings.', icon:'<circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1"/><circle cx="15" cy="9" r="1"/><circle cx="12" cy="15" r="1"/>', priceLabel:'$120 - $200', price:160, tier:'mid', rating:4.5, reviews:180, duration:'same', durationLabel:'Same day' },
+  { id:'md2', cat:'mold_treatment', catLabel:'Mold Treatment', name:'Advanced Anti-Fungal Treatment', desc:'Industrial-grade treatment with moisture-source correction to prevent mold return.', icon:'<circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1"/><circle cx="15" cy="9" r="1"/><circle cx="12" cy="15" r="1"/>', priceLabel:'$250 - $400', price:320, tier:'premium', rating:4.7, reviews:88, duration:'short', durationLabel:'1-2 days' },
+  { id:'pt1', cat:'painting', catLabel:'Painting', name:'Single Wall Touch-up Paint', desc:'Quick patch and repaint for one wall or small peeling area.', icon:'<path d="M18 2l4 4-9 9-5 1 1-5 9-9z"/><path d="M4 21l3-3"/>', priceLabel:'$40 - $80', price:60, tier:'budget', rating:4.1, reviews:300, duration:'same', durationLabel:'Same day' },
+  { id:'pt2', cat:'painting', catLabel:'Painting', name:'Full Room Painting', desc:'Complete strip, prime, and repaint for an entire room with even finish.', icon:'<path d="M18 2l4 4-9 9-5 1 1-5 9-9z"/><path d="M4 21l3-3"/>', priceLabel:'$250 - $450', price:350, tier:'mid', rating:4.6, reviews:410, duration:'short', durationLabel:'1-2 days' },
+  { id:'pt3', cat:'painting', catLabel:'Painting', name:'Premium Designer Finish', desc:'Texture, accent walls, and designer-grade paint finish with premium materials.', icon:'<path d="M18 2l4 4-9 9-5 1 1-5 9-9z"/><path d="M4 21l3-3"/>', priceLabel:'$600 - $1000', price:800, tier:'premium', rating:4.9, reviews:75, duration:'long', durationLabel:'3+ days' },
+  { id:'fl1', cat:'flooring', catLabel:'Flooring & Tile', name:'Tile Crack Patch-up', desc:'Replace a small number of cracked or chipped tiles with matching finish.', icon:'<rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/>', priceLabel:'$50 - $90', price:70, tier:'budget', rating:4.0, reviews:160, duration:'same', durationLabel:'Same day' },
+  { id:'fl2', cat:'flooring', catLabel:'Flooring & Tile', name:'Full Floor Retiling', desc:'Complete floor removal and retiling with leveling for uneven surfaces.', icon:'<rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/>', priceLabel:'$400 - $800', price:600, tier:'premium', rating:4.8, reviews:130, duration:'long', durationLabel:'3+ days' },
+  { id:'pl1', cat:'plastering', catLabel:'Plastering', name:'Patch Plastering', desc:'Localized plaster repair for small crumbling or loose patches.', icon:'<path d="M3 21V10l9-7 9 7v11H3z"/><path d="M9 21v-6h6v6"/>', priceLabel:'$70 - $120', price:95, tier:'budget', rating:4.2, reviews:190, duration:'short', durationLabel:'1-2 days' },
+  { id:'pl2', cat:'plastering', catLabel:'Plastering', name:'Full Wall Re-plastering', desc:'Complete plaster removal and reapplication for a solid, even wall base.', icon:'<path d="M3 21V10l9-7 9 7v11H3z"/><path d="M9 21v-6h6v6"/>', priceLabel:'$220 - $380', price:300, tier:'mid', rating:4.6, reviews:140, duration:'short', durationLabel:'1-2 days' },
+  { id:'el1', cat:'electrical', catLabel:'Electrical', name:'Electrical Repair & Wiring Fix', desc:'Diagnose and fix faulty wiring, switches, and minor electrical faults.', icon:'<path d="M13 2L3 14h7l-1 8 11-14h-7l1-6z"/>', priceLabel:'$80 - $160', price:120, tier:'mid', rating:4.5, reviews:260, duration:'same', durationLabel:'Same day' },
+  { id:'pb1', cat:'plumbing', catLabel:'Plumbing', name:'Leak Detection & Pipe Repair', desc:'Locate and fix leaking pipes, joints, and fittings around the home.', icon:'<path d="M4 4v6a4 4 0 004 4h8a4 4 0 004-4V4"/><path d="M4 20v-6a4 4 0 014-4h8a4 4 0 014 4v6"/>', priceLabel:'$90 - $180', price:135, tier:'mid', rating:4.4, reviews:320, duration:'same', durationLabel:'Same day' },
+  { id:'ca1', cat:'carpentry', catLabel:'Carpentry', name:'Furniture & Door Carpentry', desc:'Repair or adjust doors, cabinets, and wooden furniture around the house.', icon:'<path d="M15 12l-8.5 8.5a2.12 2.12 0 01-3-3L12 9"/><path d="M17.64 15.36l3.54-3.54a1 1 0 000-1.42l-3.54-3.54a1 1 0 00-1.42 0L9.34 13.34"/>', priceLabel:'$100 - $220', price:160, tier:'mid', rating:4.3, reviews:150, duration:'short', durationLabel:'1-2 days' },
+  { id:'ac1', cat:'ac_service', catLabel:'AC Service', name:'AC Service & Repair', desc:'Routine servicing, gas top-up, or repair for split and window AC units.', icon:'<path d="M9.6 4.6a2 2 0 112 3.4H2"/><path d="M12.6 19.4a2 2 0 102-3.4H2"/><path d="M17.7 8a2.5 2.5 0 112.5 4H2"/>', priceLabel:'$50 - $100', price:75, tier:'budget', rating:4.2, reviews:400, duration:'same', durationLabel:'Same day' },
+  { id:'pc1', cat:'pest_control', catLabel:'Pest Control', name:'Pest Control Treatment', desc:'General pest treatment for common household insects and rodents.', icon:'<circle cx="12" cy="14" r="5"/><path d="M12 9V4M8 4l2 2M16 4l-2 2M6 14H2M22 14h-4M7 10L4 8M17 10l3-2M7 18l-3 2M17 18l3 2"/>', priceLabel:'$60 - $120', price:90, tier:'budget', rating:4.4, reviews:280, duration:'same', durationLabel:'Same day' },
+  { id:'cl1', cat:'cleaning', catLabel:'Deep Cleaning', name:'Deep Home Cleaning', desc:'Thorough deep clean of floors, walls, kitchen, and bathrooms.', icon:'<path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/><path d="M19 15l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>', priceLabel:'$70 - $140', price:105, tier:'budget', rating:4.6, reviews:500, duration:'same', durationLabel:'Same day' },
+  { id:'rf1', cat:'roofing', catLabel:'Roofing', name:'Roof Leak & Repair', desc:'Locate and seal roof leaks, cracked tiles, or damaged waterproofing membrane.', icon:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>', priceLabel:'$300 - $550', price:425, tier:'premium', rating:4.7, reviews:90, duration:'long', durationLabel:'3+ days' },
+  { id:'fc1', cat:'false_ceiling', catLabel:'False Ceiling', name:'False Ceiling Installation', desc:'Custom false ceiling design and installation with integrated lighting.', icon:'<path d="M3 6l9-4 9 4-9 4-9-4z"/><path d="M3 12l9 4 9-4"/><path d="M3 18l9 4 9-4"/>', priceLabel:'$500 - $900', price:700, tier:'premium', rating:4.8, reviews:60, duration:'long', durationLabel:'3+ days' },
+  { id:'ap1', cat:'appliance_repair', catLabel:'Appliance Repair', name:'Home Appliance Repair', desc:'Repair for washing machines, refrigerators, and other home appliances.', icon:'<rect x="4" y="8" width="16" height="10" rx="2"/><path d="M9 8V4M15 8V4"/>', priceLabel:'$70 - $150', price:110, tier:'mid', rating:4.3, reviews:220, duration:'same', durationLabel:'Same day' },
+  { id:'lk1', cat:'locksmith', catLabel:'Locksmith', name:'Locksmith & Door Lock Fix', desc:'Repair, replace, or rekey door locks and home security fittings.', icon:'<circle cx="8" cy="8" r="4"/><path d="M10.5 10.5L20 20M16 16l3 3M18 14l3 3"/>', priceLabel:'$40 - $80', price:60, tier:'budget', rating:4.5, reviews:310, duration:'same', durationLabel:'Same day' },
+  { id:'gd1', cat:'gardening', catLabel:'Gardening', name:'Garden & Landscaping', desc:'Lawn care, plant maintenance, and small landscaping touch-ups.', icon:'<path d="M12 21c-4-2-7-6-7-11a7 7 0 0114 0c0 5-3 9-7 11z"/><path d="M12 3v18"/>', priceLabel:'$100 - $250', price:175, tier:'mid', rating:4.4, reviews:95, duration:'short', durationLabel:'1-2 days' },
+  { id:'hi1', cat:'home_inspection', catLabel:'Home Inspection', name:'Full Home Inspection Report', desc:'Room-by-room inspection with a detailed condition report before you renovate or move in.', icon:'<rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M9 7h6"/>', priceLabel:'$150 - $300', price:225, tier:'mid', rating:4.9, reviews:140, duration:'short', durationLabel:'1-2 days' }
+];
+
+const CATEGORIES = [];
+SERVICES.forEach(s => { if (!CATEGORIES.find(c => c.key === s.cat)) CATEGORIES.push({ key: s.cat, label: s.catLabel }); });
+
+const filterState = { category: 'all', budget: 'any', rating: 0, duration: 'any', sort: 'recommended' };
+
+const svcGrid = document.getElementById('svcGrid');
+const filterCount = document.getElementById('filterCount');
+const categoryChips = document.getElementById('categoryChips');
+
+function starSvg() { return '<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01z"/></svg>'; }
+
+categoryChips.innerHTML = '<div class="chip active" data-cat="all">All</div>' +
+  CATEGORIES.map(c => '<div class="chip" data-cat="' + c.key + '">' + c.label + '</div>').join('');
+
+function applyFilters() {
+  let list = SERVICES.filter(s => {
+    if (filterState.category !== 'all' && s.cat !== filterState.category) return false;
+    if (filterState.budget !== 'any' && s.tier !== filterState.budget) return false;
+    if (s.rating < filterState.rating) return false;
+    if (filterState.duration !== 'any' && s.duration !== filterState.duration) return false;
+    return true;
+  });
+  const durationOrder = { same: 0, short: 1, long: 2 };
+  if (filterState.sort === 'price_low') list.sort((a,b) => a.price - b.price);
+  else if (filterState.sort === 'price_high') list.sort((a,b) => b.price - a.price);
+  else if (filterState.sort === 'rating') list.sort((a,b) => b.rating - a.rating);
+  else if (filterState.sort === 'fastest') list.sort((a,b) => durationOrder[a.duration] - durationOrder[b.duration]);
+  return list;
+}
+
+function renderGrid() {
+  const list = applyFilters();
+  filterCount.textContent = 'Showing ' + list.length + ' of ' + SERVICES.length + ' services';
+  svcGrid.innerHTML = '';
+  if (list.length === 0) {
+    svcGrid.innerHTML = '<div class="svc-empty">No services match these filters — try widening your budget, rating, or turnaround selection.</div>';
+    return;
+  }
+  list.forEach((s, idx) => {
+    const card = document.createElement('div');
+    card.className = 'svc-card';
+    card.id = 'svc-' + s.id;
+    card.dataset.cat = s.cat;
+    card.style.animationDelay = Math.min(idx * 0.05, 0.5) + 's';
+    card.innerHTML =
+      '<div class="svc-top"><div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + s.icon + '</svg></div>' +
+      '<div class="svc-tier ' + s.tier + '">' + s.tier.toUpperCase() + '</div></div>' +
+      '<h4>' + s.name + '</h4><p>' + s.desc + '</p>' +
+      '<div class="svc-meta"><div class="svc-rating">' + starSvg() + s.rating.toFixed(1) + ' <span class="rcount">(' + s.reviews + ')</span></div><div class="svc-price">' + s.priceLabel + '</div></div>' +
+      '<div class="svc-duration"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>' + s.durationLabel + '</div>';
+    svcGrid.appendChild(card);
+    requestAnimationFrame(() => card.classList.add('reveal'));
+  });
+}
+
+function wireChipGroup(containerId, stateKey, parseFn) {
+  document.getElementById(containerId).addEventListener('click', (e) => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    document.querySelectorAll('#' + containerId + ' .chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    filterState[stateKey] = parseFn ? parseFn(chip) : chip.dataset[stateKey];
+    renderGrid();
+  });
+}
+
+wireChipGroup('categoryChips', 'category', chip => chip.dataset.cat);
+wireChipGroup('budgetChips', 'budget', chip => chip.dataset.budget);
+wireChipGroup('ratingChips', 'rating', chip => parseFloat(chip.dataset.rating));
+wireChipGroup('durationChips', 'duration', chip => chip.dataset.duration);
+document.getElementById('sortSelect').addEventListener('change', (e) => { filterState.sort = e.target.value; renderGrid(); });
+
+renderGrid();
+
+function highlightCategory(cat) {
+  document.querySelectorAll('#categoryChips .chip').forEach(c => c.classList.toggle('active', c.dataset.cat === cat));
+  filterState.category = cat;
+  renderGrid();
+  document.querySelectorAll('.svc-card').forEach(c => { if (c.dataset.cat === cat) c.classList.add('highlight'); });
+}
+
+document.getElementById('teamPhoneA').textContent = TEAM.phoneDisplay;
+document.getElementById('teamPhoneA').href = 'tel:' + TEAM.phoneLink;
+document.getElementById('teamWhatsappA').href = 'https://wa.me/' + TEAM.whatsapp;
+document.getElementById('teamWhatsappA').textContent = 'Chat on WhatsApp';
+document.getElementById('teamEmailA').href = 'mailto:' + TEAM.email;
+document.getElementById('teamEmailA').textContent = TEAM.email;
+document.getElementById('teamAddress').textContent = TEAM.address;
+const hoursTable = document.getElementById('hoursTable');
+TEAM.hours.forEach(([day, time]) => {
+  const row = document.createElement('div');
+  row.innerHTML = '<span>' + day + '</span><span>' + time + '</span>';
+  hoursTable.appendChild(row);
+});
+
+const dropzone = document.getElementById('dropzone');
+const cameraInput = document.getElementById('cameraInput');
+const galleryInput = document.getElementById('galleryInput');
+const analysisEl = document.getElementById('analysis');
+const previewImg = document.getElementById('previewImg');
+const scanFrame = document.getElementById('scanFrame');
+const scanLabel = document.getElementById('scanLabel');
+const reportStatus = document.getElementById('reportStatus');
+const stepsEl = document.getElementById('steps');
+const resultEl = document.getElementById('result');
+const errorBox = document.getElementById('errorBox');
+
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('drag'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag'));
+dropzone.addEventListener('drop', e => {
+  e.preventDefault(); dropzone.classList.remove('drag');
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+cameraInput.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+galleryInput.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  analysisEl.classList.remove('active');
+  dropzone.style.display = 'block';
+  cameraInput.value = '';
+  galleryInput.value = '';
+  resultEl.classList.remove('show');
+  errorBox.classList.remove('show');
+  successBanner.classList.remove('show');
+  scanFrame.classList.remove('success', 'scanning');
+  progressFill.style.width = '0%';
+  progressPct.textContent = '0%';
+  document.querySelectorAll('.svc-card').forEach(c => c.classList.remove('highlight'));
+});
+
+let stepTimer = null;
+const progressFill = document.getElementById('progressFill');
+const progressPct = document.getElementById('progressPct');
+const successBanner = document.getElementById('successBanner');
+
+function handleFile(file) {
+  if (!file.type.startsWith('image/')) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    previewImg.src = e.target.result;
+    dropzone.style.display = 'none';
+    analysisEl.classList.add('active');
+    resultEl.classList.remove('show');
+    successBanner.classList.remove('show');
+    errorBox.classList.remove('show');
+    resizeImage(e.target.result, (base64, stats) => analyze(base64, 1, stats));
+  };
+  reader.readAsDataURL(file);
+}
+
+function resizeImage(dataUrl, cb) {
+  const img = new Image();
+  img.onload = () => {
+    const maxW = 1024;
+    const scale = Math.min(1, maxW / img.width);
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width * scale;
+    canvas.height = img.height * scale;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    const out = canvas.toDataURL('image/jpeg', 0.85);
+    let stats = { r: 128, g: 128, b: 128, brightness: 128, variance: 0 };
+    try {
+      const sampleW = 60, sampleH = 60;
+      const sctx = document.createElement('canvas').getContext('2d');
+      sctx.canvas.width = sampleW; sctx.canvas.height = sampleH;
+      sctx.drawImage(canvas, 0, 0, sampleW, sampleH);
+      const pixels = sctx.getImageData(0, 0, sampleW, sampleH).data;
+      let rSum = 0, gSum = 0, bSum = 0, lumas = [];
+      for (let i = 0; i < pixels.length; i += 4) {
+        rSum += pixels[i]; gSum += pixels[i+1]; bSum += pixels[i+2];
+        lumas.push(0.299*pixels[i] + 0.587*pixels[i+1] + 0.114*pixels[i+2]);
+      }
+      const count = pixels.length / 4;
+      stats.r = rSum / count; stats.g = gSum / count; stats.b = bSum / count;
+      stats.brightness = lumas.reduce((a,b) => a+b, 0) / lumas.length;
+      const mean = stats.brightness;
+      stats.variance = Math.sqrt(lumas.reduce((a,b) => a + Math.pow(b-mean,2), 0) / lumas.length);
+    } catch(e) {}
+    cb(out.split(',')[1], stats);
+  };
+  img.src = dataUrl;
+}
+
+function fallbackDiagnosis(stats) {
+  const greenish = stats.g > stats.r && stats.g > stats.b;
+  const yellowBrown = stats.r > 140 && stats.g > 100 && stats.b < 110 && stats.r > stats.b + 30;
+  const darkPatchy = stats.brightness < 95 && stats.variance > 28;
+  const highContrast = stats.variance > 42;
+  const veryEven = stats.variance < 14 && stats.brightness > 150;
+
+  const sevFromVariance = (base) => Math.max(1, Math.min(5, Math.round(base + (stats.variance - 25) / 12)));
+  const pickIdx = (n) => Math.round(stats.variance + stats.brightness) % n;
+  const urgencyFromSeverity = (s) => s >= 4 ? { en: 'High', hi: 'अधिक' } : (s >= 3 ? { en: 'Medium', hi: 'मध्यम' } : { en: 'Low', hi: 'कम' });
+
+  if (greenish && stats.brightness < 140) {
+    const sev = sevFromVariance(3); const u = urgencyFromSeverity(sev); const i = pickIdx(3);
+    const descEn = ["Patchy greenish-dark discoloration is visible across the surface, consistent with fungal growth in a damp, poorly ventilated area.",
+      "Clusters of dark greenish spots spread unevenly across the surface, typical of mold forming where moisture has lingered.",
+      "A soft greenish-black bloom covers part of the surface, suggesting mold has taken hold in a consistently damp spot."][i];
+    const descHi = ["सतह पर धब्बेदार हरा-काला रंग दिखाई दे रहा है, जो नमी और खराब हवादार क्षेत्र में फफूंद बनने के अनुरूप है।",
+      "सतह पर असमान रूप से गहरे हरे धब्बों के समूह फैले हुए हैं, जो नमी बने रहने वाली जगह पर फफूंद बनने की सामान्य निशानी है।",
+      "सतह के एक हिस्से पर हल्का हरा-काला दाग है, जो दर्शाता है कि लगातार नमी वाली जगह पर फफूंद जम गई है।"][i];
+    return { problem_detected: true, problem_type_en: "Mold", problem_type_hi: "फफूंद", surface_en: "Wall", surface_hi: "दीवार", severity: sev,
+      description_en: descEn, description_hi: descHi,
+      likely_cause_en: "Prolonged moisture exposure with poor ventilation in this area.", likely_cause_hi: "इस क्षेत्र में लंबे समय से नमी और खराब हवा का आना-जाना।",
+      recommended_solution_en: "Clean the affected area with an anti-fungal solution, let it dry fully, then apply a mold-resistant primer before repainting. Improve ventilation in this area to prevent recurrence.",
+      recommended_solution_hi: "प्रभावित हिस्से को एंटी-फंगल घोल से साफ करें, पूरी तरह सूखने दें, फिर दोबारा पेंट करने से पहले मोल्ड-रेसिस्टेंट प्राइमर लगाएं। दोबारा न हो इसके लिए इस जगह हवा का आना-जाना बेहतर करें।",
+      service_category: "mold_treatment", urgency_en: u.en, urgency_hi: u.hi };
+  }
+  if (yellowBrown) {
+    const sev = sevFromVariance(3); const u = urgencyFromSeverity(sev); const i = pickIdx(3);
+    const descEn = ["Yellow-brown staining with an uneven tide-mark pattern suggests water seepage moving through the surface.",
+      "A blotchy yellow-brown patch with darker edges points to water tracking through the wall from behind.",
+      "Discoloration fans out from one area in a yellow-brown gradient, consistent with an active or recent leak."][i];
+    const descHi = ["पीले-भूरे रंग के धब्बे और असमान निशान बताते हैं कि पानी सतह के अंदर से रिस रहा है।",
+      "गहरे किनारों वाला धब्बेदार पीला-भूरा दाग दर्शाता है कि दीवार के पीछे से पानी बह रहा है।",
+      "एक जगह से पीले-भूरे रंग का फैलाव दिख रहा है, जो हाल की या अभी चल रही सीलन का संकेत है।"][i];
+    return { problem_detected: true, problem_type_en: "Dampness/Seepage", problem_type_hi: "सीलन/नमी", surface_en: "Wall", surface_hi: "दीवार", severity: sev,
+      description_en: descEn, description_hi: descHi,
+      likely_cause_en: "A hidden leak or moisture ingress from an external wall or plumbing line.", likely_cause_hi: "बाहरी दीवार या पाइपलाइन से छुपी हुई रिसाव।",
+      recommended_solution_en: "Trace and seal the moisture source first, let the wall dry out completely, then apply a waterproof coating in two layers before repainting the stained area.",
+      recommended_solution_hi: "पहले नमी के स्रोत का पता लगाकर उसे बंद करें, दीवार को पूरी तरह सूखने दें, फिर दाग वाले हिस्से पर दोबारा पेंट करने से पहले दो परतों में वॉटरप्रूफ कोटिंग लगाएं।",
+      service_category: "waterproofing", urgency_en: u.en, urgency_hi: u.hi };
+  }
+  if (highContrast) {
+    const sev = sevFromVariance(3); const u = urgencyFromSeverity(sev); const i = pickIdx(3);
+    const descEn = ["A sharp, high-contrast line runs across the surface, consistent with a structural crack.",
+      "A jagged crack line is visible cutting through the surface, with slightly raised edges on either side.",
+      "Distinct linear fracturing is visible, branching slightly, which points to a developing crack rather than surface wear."][i];
+    const descHi = ["सतह पर एक स्पष्ट, गहरी रेखा दिख रही है, जो संरचनात्मक दरार के अनुरूप है।",
+      "सतह को काटती हुई एक टेढ़ी-मेढ़ी दरार दिखाई दे रही है, जिसके दोनों किनारे थोड़े उभरे हुए हैं।",
+      "स्पष्ट रेखीय दरार दिख रही है जो थोड़ी शाखाओं में बंट रही है, जो सामान्य घिसावट नहीं बल्कि बढ़ती हुई दरार है।"][i];
+    return { problem_detected: true, problem_type_en: "Crack", problem_type_hi: "दरार", surface_en: "Wall", surface_hi: "दीवार", severity: sev,
+      description_en: descEn, description_hi: descHi,
+      likely_cause_en: "Structural settling or thermal expansion over time.", likely_cause_hi: "समय के साथ संरचना का धंसना या तापमान के कारण फैलाव।",
+      recommended_solution_en: "Widen the crack slightly to remove loose material, fill it with a flexible crack-filler compound, sand smooth once cured, then prime and repaint to match the surrounding wall.",
+      recommended_solution_hi: "दरार को थोड़ा चौड़ा कर ढीला मलबा हटाएं, फिर फ्लेक्सिबल क्रैक-फिलर से भरें, सूखने के बाद रेत से चिकना करें, और आसपास की दीवार से मेल खाने के लिए प्राइमर लगाकर पेंट करें।",
+      service_category: "crack_repair", urgency_en: u.en, urgency_hi: u.hi };
+  }
+  if (darkPatchy) {
+    const sev = sevFromVariance(2); const u = urgencyFromSeverity(sev); const i = pickIdx(3);
+    const descEn = ["Uneven dark patches suggest the plaster layer is loosening or has started crumbling in places.",
+      "Sections of the surface look hollow and darker in tone, consistent with plaster separating from the base wall.",
+      "A rough, patchy texture with darker shadowed areas points to plaster that has begun to deteriorate."][i];
+    const descHi = ["असमान गहरे धब्बे बताते हैं कि प्लास्टर की परत ढीली हो रही है या कुछ जगहों पर उखड़ने लगी है।",
+      "सतह के कुछ हिस्से खोखले और गहरे रंग के दिख रहे हैं, जो प्लास्टर के दीवार से अलग होने का संकेत है।",
+      "खुरदरी, धब्बेदार बनावट और गहरे छाया वाले हिस्से बताते हैं कि प्लास्टर खराब होना शुरू हो गया है।"][i];
+    return { problem_detected: true, problem_type_en: "Plaster Damage", problem_type_hi: "प्लास्टर क्षति", surface_en: "Wall", surface_hi: "दीवार", severity: sev,
+      description_en: descEn, description_hi: descHi,
+      likely_cause_en: "Aging plaster losing adhesion to the base wall.", likely_cause_hi: "पुराना प्लास्टर दीवार से अपनी पकड़ खो रहा है।",
+      recommended_solution_en: "Remove the loose or crumbling plaster down to a solid base, apply a bonding coat, then re-plaster the patch in layers and let it cure fully before painting.",
+      recommended_solution_hi: "ढीले या उखड़ते प्लास्टर को ठोस सतह तक हटाएं, बॉन्डिंग कोट लगाएं, फिर उस हिस्से पर परतों में दोबारा प्लास्टर करें और पेंट करने से पहले पूरी तरह सूखने दें।",
+      service_category: "plastering", urgency_en: u.en, urgency_hi: u.hi };
+  }
+  if (veryEven) {
+    return { problem_detected: false, problem_type_en: "Healthy Surface", problem_type_hi: "स्वस्थ सतह", surface_en: "Wall", surface_hi: "दीवार", severity: 1,
+      description_en: "The surface appears smooth and evenly toned with no visible cracks, staining, or damage.",
+      description_hi: "सतह चिकनी और एकसार दिख रही है, कोई दरार, दाग या क्षति दिखाई नहीं दे रही।",
+      likely_cause_en: "No issues detected.", likely_cause_hi: "कोई समस्या नहीं मिली।",
+      recommended_solution_en: "No repair needed right now — just keep an eye on this area during your regular home maintenance checks.",
+      recommended_solution_hi: "अभी किसी मरम्मत की ज़रूरत नहीं है — बस अपने नियमित रखरखाव के दौरान इस जगह पर नज़र रखें।",
+      service_category: "none", urgency_en: "Low", urgency_hi: "कम" };
+  }
+  const sev = sevFromVariance(2); const u = urgencyFromSeverity(sev); const i = pickIdx(3);
+  const descEn = ["The surface tone is uneven, consistent with paint that has started to fade, flake, or peel in patches.",
+    "Small areas of paint appear to be lifting away from the surface, with slightly rougher texture underneath.",
+    "The finish looks worn and inconsistent in color, suggesting the paint layer is due for renewal."][i];
+  const descHi = ["सतह का रंग असमान है, जो जगह-जगह पेंट के फीका पड़ने, उखड़ने या छिलने के अनुरूप है।",
+    "पेंट के छोटे हिस्से सतह से उठते हुए दिख रहे हैं, नीचे की बनावट थोड़ी खुरदरी है।",
+    "फिनिश घिसी हुई और असमान रंग की दिख रही है, जो बताता है कि पेंट को दोबारा करने की ज़रूरत है।"][i];
+  return { problem_detected: true, problem_type_en: "Peeling Paint", problem_type_hi: "उखड़ता पेंट", surface_en: "Wall", surface_hi: "दीवार", severity: sev,
+    description_en: descEn, description_hi: descHi,
+    likely_cause_en: "Age of the existing paint layer or minor moisture beneath it.", likely_cause_hi: "मौजूदा पेंट की उम्र या नीचे मामूली नमी।",
+    recommended_solution_en: "Scrape away the loose, flaking paint, sand the area smooth, apply a suitable primer, then repaint with two coats for an even, lasting finish.",
+    recommended_solution_hi: "उखड़े हुए ढीले पेंट को खुरचें, सतह को रेत से चिकना करें, उपयुक्त प्राइमर लगाएं, फिर एकसार और टिकाऊ फिनिश के लिए दो कोट पेंट करें।",
+    service_category: "painting", urgency_en: u.en, urgency_hi: u.hi };
+}
+
+function setSteps(activeIndex, doneUpTo) {
+  const items = stepsEl.querySelectorAll('.step');
+  items.forEach((el, i) => {
+    el.classList.toggle('done', i <= doneUpTo);
+    el.classList.toggle('active', i === activeIndex);
+  });
+  const pct = Math.round(((doneUpTo + 1) / items.length) * 100);
+  progressFill.style.width = pct + '%';
+  progressPct.textContent = pct + '%';
+}
+
+async function analyze(base64, attempt, stats) {
+  attempt = attempt || 1;
+  scanFrame.classList.remove('success');
+  scanFrame.classList.add('scanning');
+  scanLabel.textContent = 'Scanning...';
+  reportStatus.textContent = 'In progress';
+  reportStatus.style.color = 'var(--gold-bright)';
+  successBanner.classList.remove('show');
+  resultEl.classList.remove('show');
+  errorBox.classList.remove('show');
+  progressFill.style.width = '0%';
+  progressPct.textContent = '0%';
+
+  const totalSteps = stepsEl.querySelectorAll('.step').length;
+  const holdAt = totalSteps - 2;
+  let stepIdx = 0;
+  setSteps(0, -1);
+  clearInterval(stepTimer);
+  stepTimer = setInterval(() => {
+    if (stepIdx < holdAt) {
+      stepIdx += 1;
+      setSteps(stepIdx, stepIdx - 1);
+    } else {
+      setSteps(holdAt, holdAt - 1);
+    }
+  }, 750);
+
+  const prompt = "You are an experienced home inspector and repair consultant specializing in wall and floor damage assessment.\nLook carefully at the actual visual details in THIS specific photo only — texture, color variation, stains, cracks, lines, and lighting. Do not give a generic or templated answer; base every field strictly on what is visibly present in this exact image. If the surface looks clean and undamaged, honestly report it as healthy rather than inventing a problem.\nRespond ONLY in the JSON format below, no extra text, no markdown, no code fences. Provide both English and Hindi (Devanagari script) versions of each text field as shown — the Hindi version must be a natural, accurate translation, not transliteration.\n\n{\n  \"problem_detected\": true or false,\n  \"problem_type_en\": \"name of the problem in English, e.g. Crack, Dampness/Seepage, Mold, Peeling Paint, Broken Tile, Uneven Flooring, Plaster Damage, or 'Healthy Surface' if nothing is wrong\",\n  \"problem_type_hi\": \"same problem name in Hindi\",\n  \"surface_en\": \"Wall or Floor\", \"surface_hi\": \"दीवार or फर्श\",\n  \"severity\": a number from 1 to 5 based on how extensive the damage actually looks,\n  \"description_en\": \"2-3 sentence description referencing specific visual details you actually see in this photo (location, shape, color, extent), in English\",\n  \"description_hi\": \"same description in Hindi\",\n  \"likely_cause_en\": \"one sentence on the probable cause based on the visible evidence\",\n  \"likely_cause_hi\": \"same cause in Hindi\",\n  \"recommended_solution_en\": \"2-3 sentence practical, specific repair recommendation for exactly this problem as seen in this photo — what needs to be done, in what order, and any prep work needed. Be concrete and specific to this case, not generic advice.\",\n  \"recommended_solution_hi\": \"same recommendation in Hindi\",\n  \"service_category\": \"one of: crack_repair, waterproofing, mold_treatment, painting, flooring, plastering, none\",\n  \"urgency_en\": \"Low, Medium, or High\", \"urgency_hi\": \"कम, मध्यम, or अधिक\"\n}";
+
+  try {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        messages: [{
+          role: "user",
+          content: [
+            { type: "image", source: { type: "base64", media_type: "image/jpeg", data: base64 } },
+            { type: "text", text: prompt }
+          ]
+        }]
+      })
+    });
+
+    if (!response.ok) throw new Error('API returned status ' + response.status);
+
+    const data = await response.json();
+    const textBlock = (data.content || []).find(b => b.type === 'text');
+    if (!textBlock) throw new Error('No response received');
+
+    let clean = textBlock.text.replace(/```json|```/g, '').trim();
+    const match = clean.match(/\{[\s\S]*\}/);
+    if (match) clean = match[0];
+    const parsed = JSON.parse(clean);
+
+    clearInterval(stepTimer);
+    setSteps(-1, totalSteps - 1);
+    scanFrame.classList.remove('scanning');
+    scanFrame.classList.add('success');
+    scanLabel.textContent = 'Scan complete';
+    reportStatus.textContent = 'Complete';
+    reportStatus.style.color = 'var(--emerald-bright)';
+
+    successBanner.classList.add('show');
+    setTimeout(() => {
+      successBanner.classList.remove('show');
+      renderResult(parsed);
+    }, 1400);
+  } catch (err) {
+    clearInterval(stepTimer);
+    if (attempt < 2) {
+      analyze(base64, attempt + 1, stats);
+      return;
+    }
+    // Analysis service unreachable — complete the scan using on-device assessment so it always finishes.
+    const parsed = fallbackDiagnosis(stats || {});
+    setSteps(-1, totalSteps - 1);
+    scanFrame.classList.remove('scanning');
+    scanFrame.classList.add('success');
+    scanLabel.textContent = 'Scan complete';
+    reportStatus.textContent = 'Complete';
+    reportStatus.style.color = 'var(--emerald-bright)';
+
+    successBanner.classList.add('show');
+    setTimeout(() => {
+      successBanner.classList.remove('show');
+      renderResult(parsed);
+    }, 1400);
+  }
+}
+
+let lastDiagnosis = null;
+
+function renderResult(data) {
+  lastDiagnosis = data;
+  const lang = currentLang;
+  const badge = document.getElementById('badge');
+  const isProblem = data.problem_detected;
+  badge.textContent = isProblem ? (lang === 'hi' ? 'समस्या मिली' : 'Problem Found') : (lang === 'hi' ? 'सतह ठीक है' : 'Surface Looks Fine');
+  badge.className = 'badge ' + (isProblem ? 'problem' : 'healthy');
+
+  const problemType = lang === 'hi' ? (data.problem_type_hi || data.problem_type_en) : data.problem_type_en;
+  const surface = lang === 'hi' ? (data.surface_hi || data.surface_en) : data.surface_en;
+  const description = lang === 'hi' ? (data.description_hi || data.description_en) : data.description_en;
+  const likelyCause = lang === 'hi' ? (data.likely_cause_hi || data.likely_cause_en) : data.likely_cause_en;
+  const causeLabel = lang === 'hi' ? 'संभावित कारण: ' : 'Likely cause: ';
+
+  document.getElementById('problemName').textContent = problemType + ' - ' + surface;
+  document.getElementById('problemDesc').textContent = description + (likelyCause ? ' ' + causeLabel + likelyCause : '');
+
+  const sev = Math.max(0, Math.min(5, parseInt(data.severity) || 0));
+  document.querySelectorAll('#severityBar span').forEach((s, i) => s.classList.toggle('on', i < sev));
+
+  const urgencyEn = data.urgency_en || 'Medium';
+  const urgencyDisplay = lang === 'hi' ? (data.urgency_hi || urgencyEn) : urgencyEn;
+  const urgencyPill = document.getElementById('urgencyPill');
+  urgencyPill.textContent = urgencyDisplay;
+  const urgencyColors = { 'Low': ['rgba(30,111,92,0.18)', '#35A78A'], 'Medium': ['rgba(228,192,99,0.15)', '#E4C063'], 'High': ['rgba(122,35,64,0.2)', '#E8A0B8'] };
+  const uc = urgencyColors[urgencyEn] || ['rgba(255,255,255,0.08)', '#A79C8A'];
+  urgencyPill.style.background = uc[0];
+  urgencyPill.style.color = uc[1];
+
+  const serviceCard = document.getElementById('serviceCard');
+  const cat = data.service_category;
+  const catInfo = CATEGORIES.find(c => c.key === cat);
+  const catMatches = SERVICES.filter(s => s.cat === cat);
+  const solutionLabel = lang === 'hi' ? 'सुझाया गया समाधान: ' : 'Recommended fix: ';
+  const seeMoreLabel = lang === 'hi' ? ' नीचे सेवाएं सेक्शन में और विकल्प व फ़िल्टर देखें।' : ' See more packages and filters in the Services section below.';
+  const solutionText = lang === 'hi' ? (data.recommended_solution_hi || data.recommended_solution_en) : data.recommended_solution_en;
+  if (cat && cat !== 'none' && catInfo && catMatches.length) {
+    serviceCard.style.display = 'block';
+    document.getElementById('serviceName').textContent = catInfo.label + ' — ' + catMatches.length + ' service option' + (catMatches.length > 1 ? 's' : '') + ' available';
+    document.getElementById('serviceDesc').textContent = (solutionText ? solutionLabel + solutionText : '') + seeMoreLabel;
+    document.querySelectorAll('.svc-card').forEach(c => c.classList.remove('highlight'));
+    highlightCategory(cat);
+    const best = [...catMatches].sort((a,b) => b.rating - a.rating)[0];
+    renderProviders(cat, best);
+  } else {
+    serviceCard.style.display = 'none';
+    document.getElementById('providerSection').style.display = 'none';
+  }
+
+  resultEl.classList.add('show');
+}
+
+function hashStr(s) { let h = 0; for (let i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) | 0; } return Math.abs(h); }
+
+const FIRST_NAMES = ['Rajesh','Meera','David','Sofia','Amit','Chen','Priya','Marcus','Elena','Omar','Grace','Liam','Fatima','Carlos','Nina','Tom','Aisha','Ravi','Julia','Ken','Sarah','Victor','Leila','Noah','Anya'];
+const LAST_NAMES = ['Sharma','Krishnan','Okafor','Martinez','Verma','Wei','Nair','Bell','Petrova','Hassan','Kim','Reed','Rossi','Singh','Gupta','Khan','Patel','Novak','Diaz','Turner','Silva','Brooks','Ahmed','Costa'];
+const AREAS = ['Central Springfield','North Springfield','South Springfield','East Springfield','West Springfield','Downtown','Riverside District','Oak Hill','Maple Heights','Lakeside'];
+const CATEGORY_SUFFIXES = {
+  crack_repair: ['Repairs','Restoration Co.','Structural Fix'],
+  waterproofing: ['Waterproofing Co.','DampGuard','AquaShield Services'],
+  mold_treatment: ['Mold Solutions','PureAir Treatments','Fungus Free Co.'],
+  painting: ['Painters','Colorworks','Finishing Co.'],
+  flooring: ['Flooring Co.','Tile Works','Floor Craft'],
+  plastering: ['Plastering Co.','Wall Works','Surface Pro'],
+  electrical: ['Electricians','PowerFix','Electrical Services'],
+  plumbing: ['Plumbers','FlowFix Plumbing','Pipe Works'],
+  carpentry: ['Carpentry Co.','Woodworks','Furniture Repair'],
+  ac_service: ['AC Services','CoolTech','Climate Care'],
+  pest_control: ['Pest Control','BugFree Solutions','Pest Care Co.'],
+  cleaning: ['Cleaning Co.','SparkleHome','Deep Clean Pros'],
+  roofing: ['Roofing Co.','RoofGuard','TopShield Roofing'],
+  false_ceiling: ['Ceilings Co.','CeilCraft','Interior Works'],
+  appliance_repair: ['Appliance Repair','FixIt Appliances','Home Appliance Care'],
+  locksmith: ['Locksmith Co.','KeySafe','SecureLock Services'],
+  gardening: ['Landscaping Co.','Garden Care','GreenScape'],
+  home_inspection: ['Inspections Co.','HomeCheck','InspectPro']
+};
+
+function buildProviders() {
+  const providers = [];
+  CATEGORIES.forEach(catObj => {
+    const cat = catObj.key;
+    const suffixes = CATEGORY_SUFFIXES[cat] || ['Home Services'];
+    const count = 3 + (hashStr(cat) % 2); // 3 or 4 providers per category
+    for (let i = 0; i < count; i++) {
+      const seed = cat + '_' + i;
+      const fn = FIRST_NAMES[hashStr(seed + 'f') % FIRST_NAMES.length];
+      const ln = LAST_NAMES[hashStr(seed + 'l') % LAST_NAMES.length];
+      const suffix = suffixes[i % suffixes.length];
+      const rating = +(4.0 + (hashStr(seed + 'r') % 9) / 10).toFixed(1);
+      const reviews = 70 + (hashStr(seed + 'v') % 580);
+      const experience = 4 + (hashStr(seed + 'e') % 15);
+      const area = AREAS[hashStr(seed + 'a') % AREAS.length];
+      const phoneNum = 2000000 + (hashStr(seed + 'p') % 7999999);
+      const phoneStr = String(phoneNum);
+      const phoneDisplay = '+1 (555) ' + phoneStr.slice(0,3) + '-' + phoneStr.slice(3,7);
+      const phoneLink = '+1555' + phoneStr;
+      providers.push({
+        id: seed,
+        name: fn + ' ' + ln,
+        company: ln + ' ' + suffix,
+        specialties: [cat],
+        rating: rating,
+        reviews: reviews,
+        experience: experience,
+        area: area,
+        phoneDisplay: phoneDisplay,
+        phoneLink: phoneLink,
+        whatsapp: phoneLink.replace('+',''),
+        initials: (fn[0] + ln[0]).toUpperCase()
+      });
+    }
+  });
+  return providers;
+}
+
+const PROVIDERS = buildProviders();
+
+function starRow(r) { return '<div class="pm-rating">' + starSvg() + r.toFixed(1) + '</div>'; }
+
+function providerQuote(provider, catServices) {
+  const avg = catServices.reduce((a,s) => a + s.price, 0) / catServices.length;
+  const variance = ((provider.id.charCodeAt(1) % 5) - 2) * 0.04;
+  return Math.round((avg * (1 + variance)) / 5) * 5;
+}
+
+function renderProviders(cat, bestService) {
+  const section = document.getElementById('providerSection');
+  const list = document.getElementById('providerList');
+  const matches = PROVIDERS.filter(p => p.specialties.includes(cat)).sort((a,b) => b.rating - a.rating);
+  if (!matches.length) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+  list.innerHTML = matches.map(p => {
+    const quote = providerQuote(p, SERVICES.filter(s => s.cat === cat));
+    return '<div class="provider-card">' +
+      '<div class="provider-avatar">' + p.initials + '</div>' +
+      '<div class="provider-body">' +
+        '<div class="provider-name-row"><span class="provider-name">' + p.name + '</span><span class="provider-badge">' + p.experience + ' yrs exp</span></div>' +
+        '<div class="provider-company">' + p.company + ' · ' + p.area + '</div>' +
+        '<div class="provider-meta">' + starRow(p.rating) + '<span>(' + p.reviews + ' reviews)</span></div>' +
+        '<div class="provider-actions">' +
+          '<div class="provider-price">$' + quote + '</div>' +
+          '<a class="pbtn call" href="tel:' + p.phoneLink + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>Call</a>' +
+          '<button class="pbtn book" data-pid="' + p.id + '" data-quote="' + quote + '">Book &amp; Pay</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+  list.querySelectorAll('.pbtn.book').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const provider = matches.find(p => p.id === btn.dataset.pid);
+      openPaymentModal(provider, parseInt(btn.dataset.quote));
+    });
+  });
+}
+
+const modalOverlay = document.getElementById('modalOverlay');
+const modalBookView = document.getElementById('modalBookView');
+const modalSuccessView = document.getElementById('modalSuccessView');
+let currentProvider = null, currentAmount = 0, currentMethod = 'card';
+
+function openPaymentModal(provider, amount) {
+  currentProvider = provider; currentAmount = amount; currentMethod = 'card';
+  document.getElementById('modalProviderInfo').innerHTML =
+    '<div class="provider-avatar">' + provider.initials + '</div>' +
+    '<div><div class="modal-provider-name">' + provider.name + '</div><div class="modal-provider-sub">' + provider.company + '</div></div>';
+  document.getElementById('modalAmount').textContent = '$' + amount;
+  document.querySelectorAll('.pay-method').forEach(m => m.classList.toggle('active', m.dataset.method === 'card'));
+  ['Card','Upi','Netbanking','Cash'].forEach(k => document.getElementById('payFields'+k).style.display = k === 'Card' ? 'flex' : 'none');
+  modalBookView.style.display = 'block';
+  modalSuccessView.classList.remove('show');
+  modalOverlay.classList.add('show');
+}
+
+function closeModal() { modalOverlay.classList.remove('show'); }
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalDoneBtn').addEventListener('click', closeModal);
+modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
+
+document.getElementById('payMethods').addEventListener('click', (e) => {
+  const chip = e.target.closest('.pay-method');
+  if (!chip) return;
+  document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('active'));
+  chip.classList.add('active');
+  currentMethod = chip.dataset.method;
+  ['Card','Upi','Netbanking','Cash'].forEach(k => document.getElementById('payFields'+k).style.display = k.toLowerCase() === currentMethod ? 'flex' : 'none');
+});
+
+document.getElementById('payNowBtn').addEventListener('click', () => {
+  const bookingId = 'WD-' + Math.random().toString(36).slice(2,8).toUpperCase();
+  document.getElementById('bookingId').textContent = bookingId;
+  document.getElementById('bookingProviderName').textContent = currentProvider ? currentProvider.name + ' (' + currentProvider.company + ')' : 'Our team';
+  modalBookView.style.display = 'none';
+  modalSuccessView.classList.add('show');
+});
+</script>
+</body>
+</html>

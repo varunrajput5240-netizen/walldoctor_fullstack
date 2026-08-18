@@ -728,7 +728,7 @@ document.getElementById('authSubmitBtn').addEventListener('click', async () => {
 
   // UPDATED: Added /api prefix to match your backend endpoints
   const endpoint = authMode === 'signup' ? '/api/auth/signup' : '/api/auth/login'; 
-  const apiUrl = 'http://127.0.0.1:8000' + endpoint;
+  const apiUrl = 'https://walldoctor-fullstack.onrender.com' + endpoint;
 
   try {
     const payload = authMode === 'signup' ? { name, email, password } : { email, password };
